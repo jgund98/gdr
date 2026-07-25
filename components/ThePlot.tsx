@@ -9,6 +9,7 @@ import Reveal from "@/components/Reveal";
 import PalmShadow from "@/components/PalmShadow";
 import { StatusChip } from "@/components/PropertyCard";
 import { bySlug } from "@/lib/properties";
+import { districts } from "@/lib/site";
 import { noWidow } from "@/lib/text";
 import { cn } from "@/lib/cn";
 
@@ -43,8 +44,14 @@ const zones = [
 
 export default function ThePlot({ compact = false }: { compact?: boolean }) {
   const [active, setActive] = useState<string>("greymon-317");
+  const [zone, setZone] = useState<string | null>(null);
   const p = bySlug(active);
+  const d = zone ? districts.find((x) => x.key === zone) : null;
   const allSlugs = [...pins, ...laPins].map((x) => x.slug);
+  const pick = (slug: string) => {
+    setZone(null);
+    setActive(slug);
+  };
 
   return (
     <section className="relative overflow-hidden bg-paper py-24 text-ink md:py-32">
@@ -62,7 +69,7 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
                 <em className="text-moss">concentrates.</em>
               </span>,
             ]}
-            lede="One city, a handful of protected streets, and a collection that keeps landing on them. This is the drawing we actually work from."
+            lede="One city, a handful of protected districts, and a collection that keeps landing on them. Touch a district for its history; touch a pin for a residence."
           />
         )}
 
@@ -79,15 +86,20 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
 
                 {/* neighborhood zones — the tinted claims */}
                 {zones.map((z) => (
-                  <g key={z.key}>
+                  <g
+                    key={z.key}
+                    className="cursor-pointer"
+                    onClick={() => setZone(z.key)}
+                    onMouseEnter={() => setZone(z.key)}
+                  >
                     <rect
                       x={z.x}
                       y={z.y}
                       width={z.w}
                       height={z.h}
-                      fill="rgba(137,191,88,0.10)"
-                      stroke="rgba(71,118,31,0.28)"
-                      strokeWidth="1"
+                      fill={zone === z.key ? "rgba(137,191,88,0.22)" : "rgba(137,191,88,0.10)"}
+                      stroke={zone === z.key ? "rgba(71,118,31,0.6)" : "rgba(71,118,31,0.28)"}
+                      strokeWidth={zone === z.key ? "1.6" : "1"}
                       strokeDasharray="5 4"
                     />
                     <text
@@ -163,8 +175,8 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
                       key={pin.slug}
                       transform={`translate(${pin.x} ${pin.y})`}
                       className="cursor-pointer"
-                      onMouseEnter={() => setActive(pin.slug)}
-                      onClick={() => setActive(pin.slug)}
+                      onMouseEnter={() => pick(pin.slug)}
+                      onClick={() => pick(pin.slug)}
                     >
                       {isActive && (
                         <rect x="-15" y="-15" width="30" height="30" transform="rotate(45)" fill="none" stroke="#47761f" strokeWidth="1.5" opacity="0.6">
@@ -203,8 +215,8 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
                       key={pin.slug}
                       transform={`translate(${pin.x} ${pin.y})`}
                       className="cursor-pointer"
-                      onMouseEnter={() => setActive(pin.slug)}
-                      onClick={() => setActive(pin.slug)}
+                      onMouseEnter={() => pick(pin.slug)}
+                      onClick={() => pick(pin.slug)}
                     >
                       <rect x="-6" y="-6" width="12" height="12" transform="rotate(45)" fill={active === pin.slug ? "#47761f" : "#89bf58"} stroke="#f3f5ed" strokeWidth="2" />
                       <circle r="17" fill="transparent" />
@@ -219,33 +231,70 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
           <div>
             <div className="flex h-full flex-col border border-ink/15 bg-paper p-6 shadow-[0_30px_80px_rgba(11,14,9,0.12)] md:p-8">
               <AnimatePresence mode="wait" initial={false}>
-                {p && (
+                {d ? (
+                  /* district dossier — the history behind the tint */
                   <motion.div
-                    key={p.slug}
+                    key={`zone-${d.key}`}
                     initial={{ opacity: 0, y: 18 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                   >
-                    <div className="plate plate-ink">
-                      <Link href={`/residences/${p.slug}`} className="group block">
-                        <div className="relative aspect-[16/10] overflow-hidden">
-                          <Image
-                            src={`/properties/${p.slug}/01.webp`}
-                            alt={`${p.address}, ${p.city}`}
-                            fill
-                            sizes="(min-width: 1024px) 40vw, 100vw"
-                            className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                          />
-                          <StatusChip status={p.status} className="absolute left-4 top-4 z-10" />
-                        </div>
-                      </Link>
-                    </div>
-                    <p className="display mt-6 text-3xl md:text-4xl">{noWidow(p.address)}</p>
-                    <p className="label mt-2 text-ink/50">
-                      {p.neighborhood} · {p.city}
+                    <p className="tag-index-ink">The district</p>
+                    <p className="display mt-3 text-3xl md:text-4xl">{d.name}</p>
+                    <p className="label mt-3 text-moss">{d.designation}</p>
+                    <p className="label mt-1.5 text-ink/45">{d.era}</p>
+                    <p className="mt-5 leading-relaxed text-ink/75">{d.story}</p>
+                    <p className="mt-4 border-l-2 border-moss/50 pl-4 text-sm leading-relaxed text-ink/60">
+                      {d.gdrNote}
                     </p>
+                    {d.slugs.length > 0 && (
+                      <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2">
+                        {d.slugs.map((slug) => {
+                          const item = bySlug(slug);
+                          if (!item) return null;
+                          return (
+                            <Link
+                              key={slug}
+                              href={`/residences/${slug}`}
+                              className="border-b border-moss/50 pb-0.5 text-sm font-semibold text-moss transition-colors hover:border-ink hover:text-ink"
+                            >
+                              {item.address} →
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    )}
                   </motion.div>
+                ) : (
+                  p && (
+                    <motion.div
+                      key={p.slug}
+                      initial={{ opacity: 0, y: 18 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                      <div className="plate plate-ink">
+                        <Link href={`/residences/${p.slug}`} className="group block">
+                          <div className="relative aspect-[16/10] overflow-hidden">
+                            <Image
+                              src={`/properties/${p.slug}/01.webp`}
+                              alt={`${p.address}, ${p.city}`}
+                              fill
+                              sizes="(min-width: 1024px) 40vw, 100vw"
+                              className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                            />
+                            <StatusChip status={p.status} className="absolute left-4 top-4 z-10" />
+                          </div>
+                        </Link>
+                      </div>
+                      <p className="display mt-6 text-3xl md:text-4xl">{noWidow(p.address)}</p>
+                      <p className="label mt-2 text-ink/50">
+                        {p.neighborhood} · {p.city}
+                      </p>
+                    </motion.div>
+                  )
                 )}
               </AnimatePresence>
 
@@ -259,8 +308,8 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
                     <li key={slug}>
                       <Link
                         href={`/residences/${slug}`}
-                        onMouseEnter={() => setActive(slug)}
-                        onFocus={() => setActive(slug)}
+                        onMouseEnter={() => pick(slug)}
+                        onFocus={() => pick(slug)}
                         className={cn(
                           "flex items-baseline justify-between gap-4 border-b border-ink/10 py-3 transition-colors",
                           isActive ? "text-moss" : "text-ink/70 hover:text-ink"

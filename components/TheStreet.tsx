@@ -82,7 +82,7 @@ export default function TheStreet() {
                 FOUR GDR <em className="text-moss">homes.</em>
               </span>,
             ]}
-            lede="When we believe in a street, we don't buy once. Travel Greymon Drive — every stop is ours."
+            lede="When we believe in a street, we don't buy once. Four GDR residences on Greymon Drive alone — travel them in order."
           />
           <Reveal>
             <div className="hidden items-center gap-3 lg:flex">
@@ -120,10 +120,10 @@ export default function TheStreet() {
           onPointerLeave={endDrag}
           onClickCapture={onClickCapture}
         >
-          {/* lead-in: the street sign */}
-          <div className="flex w-[14vw] min-w-[80px] shrink-0 items-end lg:w-[22vw]">
+          {/* lead-in: the street sign (desktop only — it collides on phones) */}
+          <div className="flex w-[8vw] min-w-[40px] shrink-0 items-end md:w-[22vw] md:min-w-[80px]">
             <div className="relative h-px w-full bg-ink/25">
-              <span className="absolute -top-14 left-5 label whitespace-nowrap text-ink/50 sm:left-8">
+              <span className="absolute -top-14 left-5 hidden label whitespace-nowrap text-ink/50 md:block lg:left-8">
                 Greymon Dr — SoSo, West Palm Beach
               </span>
             </div>
@@ -172,7 +172,7 @@ export default function TheStreet() {
           {/* tail-out */}
           <div className="flex w-[24vw] min-w-[120px] shrink-0 items-end">
             <div className="relative h-px w-full bg-ink/25">
-              <span className="absolute -top-14 right-5 label whitespace-nowrap text-ink/50">
+              <span className="absolute -top-14 right-5 hidden label whitespace-nowrap text-ink/50 md:block">
                 The next lot is already circled
               </span>
             </div>

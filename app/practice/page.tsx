@@ -136,6 +136,60 @@ export default function PracticePage() {
         </div>
       </section>
 
+      {/* the districts — preservation is the practice */}
+      <section className="relative overflow-hidden bg-paper py-20 text-ink md:py-28">
+        <div className="survey-ink pointer-events-none absolute inset-0 opacity-50" aria-hidden />
+        <div className="relative mx-auto max-w-7xl px-5 md:px-8">
+          <SectionHead
+            tone="paper"
+            index="The Districts"
+            tag="Historic Preservation"
+            lines={[
+              "WE BUILD WHERE",
+              <span key="l2">
+                HISTORY IS <em className="text-moss">protected.</em>
+              </span>,
+            ]}
+            lede="GDR builds in and around West Palm Beach's designated historic districts. That isn't a constraint we tolerate — it's the reason these streets are worth building on. Original massing, period character, and neighborhood scale lead every plan we draw."
+          />
+          <div className="mt-12 grid gap-6 lg:grid-cols-3">
+            {[
+              {
+                name: "El Cid",
+                fact: "National Register, 1995 · 281 historic buildings",
+                body: "Born of the 1920s boom on the old pineapple fields — block after block of Mediterranean Revival and Mission homes facing the Intracoastal. The protected scale is the whole point.",
+              },
+              {
+                name: "Flamingo Park",
+                fact: "City district 1993 · National Register 2000",
+                body: "Platted in 1921 on the highest coastal ridge between downtown and Miami — 501 contributing Mission, Mediterranean Revival, and Frame Vernacular structures still standing.",
+              },
+              {
+                name: "Prospect & Southland Park",
+                fact: "National Register, 2011 · significance 1922–1945",
+                body: "A neighborhood gridded after Brooklyn's Prospect Park, with its own waterfront park along Washington Road. Quiet streets that never lost their plan.",
+              },
+            ].map((dz, i) => (
+              <Reveal key={dz.name} delay={0.07 * i}>
+                <div className="flex h-full flex-col border border-ink/15 bg-paper p-7 transition-colors hover:border-moss/50 md:p-8">
+                  <p className="label text-moss">{dz.fact}</p>
+                  <h3 className="display mt-3 text-2xl md:text-[1.65rem]">{dz.name}</h3>
+                  <p className="mt-4 flex-1 text-sm leading-relaxed text-ink/65">{dz.body}</p>
+                  <p className="label mt-6 text-ink/35">West Palm Beach</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+          <Reveal delay={0.1} className="mt-10">
+            <p className="lede max-w-3xl text-ink/60">
+              Preservation-minded planning isn't paperwork to us. It's why a GDR
+              rebuild looks like it always belonged — and why the street's value
+              holds after we leave. <em className="text-moss">The district is the client, too.</em>
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
       {/* principles */}
       <section className="relative py-20 md:py-28">
         <div className="mx-auto max-w-7xl px-5 md:px-8">

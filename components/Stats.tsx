@@ -64,8 +64,8 @@ export default function Stats() {
     >
       <div ref={ref} className="mx-auto grid max-w-7xl grid-cols-2 gap-x-6 gap-y-10 px-5 md:px-8 lg:grid-cols-4">
         {stats.map((s, i) => (
-          <div key={s.label} className="relative border-l border-line pl-5">
-            <p className="display text-5xl text-green md:text-6xl">
+          <div key={s.label} className="relative border-l border-line pl-4 md:pl-5">
+            <p className="display text-[2rem] leading-tight text-green sm:text-5xl md:text-6xl">
               <Counter value={s.value} prefix={"prefix" in s ? s.prefix : ""} suffix={s.suffix} run={inView} />
             </p>
             <p className="mt-3 max-w-[15rem] text-sm leading-relaxed text-mist">{s.label}</p>

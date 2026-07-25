@@ -26,30 +26,30 @@ export default function BuyDirect() {
           </p>
         </Reveal>
 
-        {/* the line itself: developer ——◆—— you */}
-        <div className="mt-10 flex items-center gap-5 md:mt-14 md:gap-8">
+        {/* the line itself: developer ——◆—— you (stacks on phones) */}
+        <div className="mt-10 flex flex-col gap-5 md:mt-14 md:flex-row md:items-center md:gap-8">
           <Reveal>
-            <h2 className="display whitespace-nowrap text-4xl sm:text-5xl lg:text-7xl">THE DEVELOPER</h2>
+            <h2 className="display text-4xl sm:text-5xl md:whitespace-nowrap lg:text-7xl">THE DEVELOPER</h2>
           </Reveal>
-          <div className="relative h-[2px] flex-1 overflow-visible">
+          <div className="relative h-[2px] w-full overflow-visible md:w-auto md:flex-1">
             <motion.div
               className="h-full origin-left bg-green shadow-[0_0_14px_rgba(137,191,88,0.7)]"
               initial={reduced ? false : { scaleX: 0 }}
               whileInView={{ scaleX: 1 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ delay: 0.35, duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ delay: 0.25, duration: 1.0, ease: [0.22, 1, 0.36, 1] }}
             />
             <motion.span
               className="absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rotate-45 bg-green"
               initial={reduced ? false : { opacity: 0, scale: 0 }}
               whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ delay: 1.0, duration: 0.3 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ delay: 0.8, duration: 0.3 }}
               aria-hidden
             />
           </div>
           <Reveal delay={0.1}>
-            <h2 className="display whitespace-nowrap text-4xl text-green sm:text-5xl lg:text-7xl">YOU.</h2>
+            <h2 className="display text-4xl text-green sm:text-5xl md:whitespace-nowrap lg:text-7xl">YOU.</h2>
           </Reveal>
         </div>
 
@@ -63,8 +63,8 @@ export default function BuyDirect() {
                   className="absolute left-[-2%] top-1/2 h-[3px] w-[104%] origin-left bg-green/90"
                   initial={reduced ? false : { scaleX: 0 }}
                   whileInView={{ scaleX: 1 }}
-                  viewport={{ once: true, margin: "-80px" }}
-                  transition={{ delay: 0.5 + i * 0.22, duration: 0.35, ease: "easeOut" }}
+                  viewport={{ once: true, margin: "-40px" }}
+                  transition={{ delay: 0.25 + i * 0.16, duration: 0.35, ease: "easeOut" }}
                   aria-hidden
                 />
               </p>

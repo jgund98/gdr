@@ -43,41 +43,59 @@ export const tickerItems = [
   "SoSo · South of Southern",
 ] as const;
 
-export const neighborhoods = [
+/**
+ * The districts — verified history only (National Register + city records).
+ * Zone keys match ThePlot's drawn zones.
+ */
+export const districts = [
   {
-    key: "el-cid",
-    name: "El Cid",
-    place: "West Palm Beach, FL",
-    coords: "26.6960° N · 80.0533° W",
-    image: "/site/el-cid.webp",
-    blurb:
-      "Mediterranean revivals on the Intracoastal's oldest streets — restored to the scale the neighborhood protects.",
+    key: "flamingo",
+    name: "Flamingo Park",
+    designation: "City historic district 1993 · National Register 2000",
+    era: "Platted 1921 — Florida land boom",
+    story:
+      "Laid out on the highest coastal ridge between downtown and Miami, Flamingo Park filled through the 1920s with Mission and Mediterranean Revival homes — 501 contributing structures still stand. The neighborhood knows exactly what it is, and protects it.",
+    gdrNote: "GDR here: a historic cottage kept, and completely rebuilt behind its character.",
+    slugs: ["kanuga-707"],
   },
   {
-    key: "flamingo-park",
-    name: "Flamingo Park",
-    place: "West Palm Beach, FL",
-    coords: "26.6980° N · 80.0600° W",
-    image: "/site/flamingo-aerial.webp",
-    blurb:
-      "Historic character cottages rebuilt around light, circulation, and rooms that finally work.",
+    key: "elcid",
+    name: "El Cid",
+    designation: "National Register 1995 · 281 historic buildings",
+    era: "1923–1926 — built over the old pineapple fields",
+    story:
+      "Jay Phipps assembled the failed pineapple plantations along the Intracoastal and the 1920s boom did the rest: block after block of Mediterranean Revival and Mission homes facing the water. The scale is protected; the character is the point.",
+    gdrNote: "The standard we restore to — Mediterranean massing, original street character.",
+    slugs: [],
+  },
+  {
+    key: "prospect",
+    name: "Prospect Park",
+    designation: "Prospect–Southland National Register district, 2011",
+    era: "1922–1945 — gridded after Brooklyn's Prospect Park",
+    story:
+      "A 1920s neighborhood literally modeled on Brooklyn's Prospect Park — a central green with benches and a fountain, streets that still keep the plan. Its period of significance runs 1922 to 1945, and it shows.",
+    gdrNote: "Coastal cottages opened up — brighter interiors, renewed systems, nothing false.",
+    slugs: [],
   },
   {
     key: "southland",
-    name: "Prospect & Southland Park",
-    place: "West Palm Beach, FL",
-    coords: "26.6870° N · 80.0540° W",
-    image: "/site/wpb-skyline.webp",
-    blurb:
-      "Coastal cottages opened up — brighter interiors, renewed systems, nothing false.",
+    name: "Southland Park",
+    designation: "Prospect–Southland National Register district, 2011",
+    era: "1920s — waterfront park along Washington Road",
+    story:
+      "The southern half of the Register district, with its own waterfront park running along Washington Road. Quiet streets, original massing, Intracoastal light — the kind of block that rewards patience.",
+    gdrNote: "GDR here: 3609 Washington Rd — nearly 3,000 square feet planned around light.",
+    slugs: ["washington-3609"],
   },
   {
-    key: "california",
-    name: "California Hillsides",
-    place: "Bel Air · Hollywood Hills",
-    coords: "34.0900° N · 118.4440° W",
-    image: "/properties/marlay-1501/02.webp",
-    blurb:
-      "Ground-up builds and canyon rebuilds across Los Angeles, engineered into the grade.",
+    key: "soso",
+    name: "SoSo — South of Southern",
+    designation: "The estate section south of Southern Blvd",
+    era: "Where the collection concentrates",
+    story:
+      "Not a museum district — the estate streets between Olive and the Intracoastal where old Palm Beach charm meets full rebuilds. This is where GDR keeps buying, street by street.",
+    gdrNote: "Four GDR residences on Greymon Drive alone.",
+    slugs: ["greymon-227", "greymon-309", "greymon-317", "greymon-335"],
   },
 ] as const;

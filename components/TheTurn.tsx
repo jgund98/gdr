@@ -36,10 +36,11 @@ export default function TheTurn() {
           lines={[
             "WE BUY THE HOUSE",
             <span key="l2">
-              <em className="text-green">nobody</em> WANTS ON THE
+              <em className="text-green">nobody</em> WANTS
             </span>,
-            <span key="l3">
-              STREET <em className="text-green">everybody</em> DOES.
+            "ON THE STREET",
+            <span key="l4">
+              <em className="text-green">everybody</em> DOES.
             </span>,
           ]}
           lede={
