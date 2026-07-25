@@ -1,6 +1,5 @@
 import Link from "next/link";
 import Image from "next/image";
-import { DimLine } from "@/components/PlanArt";
 import { nav, site } from "@/lib/site";
 
 export default function Footer() {
@@ -111,11 +110,6 @@ export default function Footer() {
             />
           </a>
         </div>
-      </div>
-
-      {/* the measured sign-off */}
-      <div className="mx-auto max-w-7xl px-5 pb-4 md:px-8">
-        <DimLine label="Est. 1997 — West Palm Beach · Los Angeles" />
       </div>
 
       {/* the sign-off: the name, edge to edge on every screen */}

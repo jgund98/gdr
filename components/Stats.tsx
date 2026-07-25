@@ -63,13 +63,12 @@ export default function Stats() {
       className="relative overflow-hidden border-b border-line bg-ink py-14 md:py-16"
     >
       <div ref={ref} className="mx-auto grid max-w-7xl grid-cols-2 gap-x-6 gap-y-10 px-5 md:px-8 lg:grid-cols-4">
-        {stats.map((s, i) => (
-          <div key={s.label} className="relative border-l border-line pl-4 md:pl-5">
+        {stats.map((s) => (
+          <div key={s.label} className="border-l border-line pl-4 md:pl-5">
             <p className="display text-[2rem] leading-tight text-green sm:text-5xl md:text-6xl">
               <Counter value={s.value} prefix={"prefix" in s ? s.prefix : ""} suffix={s.suffix} run={inView} />
             </p>
             <p className="mt-3 max-w-[15rem] text-sm leading-relaxed text-mist">{s.label}</p>
-            <span className="absolute -top-1 right-2 label text-faint">{String(i + 1).padStart(2, "0")}</span>
           </div>
         ))}
       </div>

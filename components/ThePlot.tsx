@@ -20,13 +20,16 @@ import { cn } from "@/lib/cn";
  * runs beneath as one strip of uniform chips. Touch a district for its
  * history; touch a pin or chip for a residence.
  */
+/* Pins sit where the addresses actually fall: Greymon Dr runs east–west in
+   SoSo with numbers climbing away from the water; the 3600 block of
+   Washington Rd is just south of Southern, near the shore. */
 const pins = [
-  { slug: "kanuga-707", x: 200, y: 152 },
-  { slug: "washington-3609", x: 508, y: 478 },
-  { slug: "greymon-227", x: 360, y: 600 },
-  { slug: "greymon-309", x: 412, y: 636 },
-  { slug: "greymon-317", x: 464, y: 672 },
-  { slug: "greymon-335", x: 516, y: 708 },
+  { slug: "kanuga-707", x: 210, y: 180 },
+  { slug: "washington-3609", x: 612, y: 552 },
+  { slug: "greymon-227", x: 560, y: 644 },
+  { slug: "greymon-309", x: 508, y: 644 },
+  { slug: "greymon-317", x: 456, y: 644 },
+  { slug: "greymon-335", x: 404, y: 644 },
 ] as const;
 
 const laPins = [
@@ -126,7 +129,7 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
 
   return (
     <section className="relative overflow-hidden bg-paper py-24 text-ink md:py-32">
-      <PalmShadow className="right-[-8%] top-[-4%] h-[440px] w-[440px] opacity-25 md:h-[640px] md:w-[640px]" flip />
+      <PalmShadow className="right-[-24%] top-[-6%] h-[440px] w-[440px] opacity-25 sm:right-[-14%] md:h-[640px] md:w-[640px]" flip />
       <div className="survey-ink pointer-events-none absolute inset-0 opacity-70" aria-hidden />
       <div className="relative mx-auto max-w-7xl px-5 md:px-8">
         {!compact && (
@@ -207,6 +210,7 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
                 <text x="633" y="90" transform="rotate(90 633 90)">S FLAGLER DR</text>
                 <text x="46" y="200">BELVEDERE RD</text>
                 <text x="46" y="512">SOUTHERN BLVD</text>
+                <text x="222" y="650" fontSize="11" fill="rgba(11,14,9,0.4)">GREYMON DR</text>
               </g>
 
               {/* the water — the sheet's margin, where the note gets pinned */}

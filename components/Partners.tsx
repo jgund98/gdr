@@ -37,7 +37,7 @@ const partners = [
 export default function Partners({ index = "09" }: { index?: string }) {
   return (
     <section id="partners" className="relative overflow-hidden bg-paper py-24 text-ink md:py-32">
-      <PalmShadow className="right-[-7%] top-[-5%] h-[420px] w-[420px] opacity-20 md:h-[600px] md:w-[600px]" flip delay={1} />
+      <PalmShadow className="right-[-24%] top-[-7%] h-[420px] w-[420px] opacity-20 sm:right-[-14%] md:h-[600px] md:w-[600px]" flip delay={1} />
       <div className="relative mx-auto max-w-7xl px-5 md:px-8">
         <SectionHead
           tone="paper"

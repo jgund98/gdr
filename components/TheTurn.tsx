@@ -31,23 +31,20 @@ export default function TheTurn() {
     <section className="relative overflow-hidden bg-ink-2 py-24 md:py-32">
       <div className="glow-tl relative mx-auto max-w-7xl px-5 md:px-8">
         <SectionHead
-          index="02"
+          index="03"
           tag="The Turn"
           lines={[
-            "WE BUY THE HOUSE",
-            <span key="l2">
-              <em className="text-green">nobody</em> WANTS
+            <span key="l1">
+              THE HOUSE <em className="text-green">nobody</em> WANTS.
             </span>,
-            "ON THE STREET",
-            <span key="l4">
-              <em className="text-green">everybody</em> DOES.
+            <span key="l2">
+              THE STREET <em className="text-green">everybody</em> DOES.
             </span>,
           ]}
           lede={
             <>
               335 Greymon Dr, exactly as we found it — and the residence taking
-              its place. Drag the line. We publish the before because we&rsquo;re
-              proud of the distance.
+              its place. Drag the&nbsp;line.
             </>
           }
         />

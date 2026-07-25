@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { useRef } from "react";
+import { motion, useInView, useReducedMotion } from "motion/react";
 import Btn from "@/components/Btn";
 import Reveal from "@/components/Reveal";
 import Mark from "@/components/Mark";
@@ -15,6 +16,8 @@ const cutOut = ["the listing theater", "the staging games", "the spec-flip marku
  */
 export default function BuyDirect() {
   const reduced = useReducedMotion();
+  const strikeRef = useRef<HTMLDivElement | null>(null);
+  const strikesIn = useInView(strikeRef, { once: true, margin: "-40px" });
 
   return (
     <section className="relative overflow-hidden bg-ink-2 py-24 md:py-36">
@@ -53,18 +56,20 @@ export default function BuyDirect() {
           </Reveal>
         </div>
 
-        {/* what the line cuts out — struck at size */}
-        <div className="mt-12 flex flex-col gap-2 md:mt-16">
+        {/* what the line cuts out — struck at size. One observer on the
+            untranslated wrapper drives all three strikes (nested whileInView
+            inside translated parents never fires on iOS). */}
+        <div ref={strikeRef} className="mt-12 flex flex-col gap-2 md:mt-16">
           {cutOut.map((item, i) => (
             <Reveal key={item} delay={0.08 * i}>
               <p className="relative w-fit font-serif text-3xl italic text-paper/35 sm:text-4xl lg:text-5xl">
                 {item}
-                <motion.span
+                <span
                   className="absolute left-[-2%] top-1/2 h-[3px] w-[104%] origin-left bg-green/90"
-                  initial={reduced ? false : { scaleX: 0 }}
-                  whileInView={{ scaleX: 1 }}
-                  viewport={{ once: true, margin: "-40px" }}
-                  transition={{ delay: 0.25 + i * 0.16, duration: 0.35, ease: "easeOut" }}
+                  style={{
+                    transform: strikesIn || reduced ? "scaleX(1)" : "scaleX(0)",
+                    transition: `transform 0.35s ease-out ${0.35 + i * 0.18}s`,
+                  }}
                   aria-hidden
                 />
               </p>

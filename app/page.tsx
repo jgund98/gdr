@@ -19,8 +19,8 @@ export default function Home() {
       <HeroReveal />
       <Stats />
       <ThePlot />
-      <TheTurn />
       <TheStreet />
+      <TheTurn />
 
       {/* № 04 — the film */}
       <section className="relative overflow-hidden bg-ink-2 py-24 md:py-32">
@@ -29,12 +29,12 @@ export default function Home() {
             index="04"
             tag="The Film"
             lines={[
-              "WALK A FINISHED",
+              "A FINISHED GDR HOME,",
               <span key="l2">
-                GDR <em className="text-green">home.</em>
+                <em className="text-green">on film.</em>
               </span>,
             ]}
-            lede="317 Greymon Dr, completed. No renderings, no staging tricks — the delivered residence, inside and above."
+            lede="317 Greymon Dr, completed. No renderings, no staging tricks — the delivered residence as the camera found it."
           />
           <Reveal delay={0.12} className="mt-12">
             <FilmTheater
