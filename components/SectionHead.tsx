@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import Reveal from "@/components/Reveal";
 import RevealLines from "@/components/RevealLines";
+import Mark from "@/components/Mark";
 import { cn } from "@/lib/cn";
 
 /**
@@ -27,8 +28,11 @@ export default function SectionHead({
   return (
     <div className={cn("max-w-4xl", className)}>
       <Reveal>
-        <p className={tone === "paper" ? "tag-index-ink" : "tag-index"}>
-          {index} — {tag}
+        <p className="flex items-center gap-2.5">
+          <Mark className={cn("h-3.5 w-auto", tone === "paper" ? "text-moss" : "text-green")} />
+          <span className={tone === "paper" ? "tag-index-ink" : "tag-index"}>
+            {index} — {tag}
+          </span>
         </p>
       </Reveal>
       <RevealLines

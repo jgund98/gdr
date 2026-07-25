@@ -4,3 +4,5 @@ out
 raw-assets
 tsconfig.tsbuildinfo
 .env*
+
+.vercel

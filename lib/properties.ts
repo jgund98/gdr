@@ -149,7 +149,7 @@ export const properties: Property[] = [
     neighborhood: "Hollywood Hills",
     region: "Los Angeles",
     status: "Coming Soon",
-    images: 4,
+    images: 3,
     blurb: "A modern hillside residence above the canyon — large openings, simple lines, materials that last.",
     body: [
       "A modern rebuild engineered into the hillside: large openings, simplified lines, and long-lasting materials chosen for the canyon light.",

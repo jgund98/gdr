@@ -37,8 +37,8 @@ export default function ContactPage() {
                 <div className="plate hidden lg:block">
                   <div className="relative aspect-[4/3] overflow-hidden">
                     <Image
-                      src="/site/el-cid.webp"
-                      alt="A restored Mediterranean residence at dusk, West Palm Beach"
+                      src="/properties/greymon-227/01.webp"
+                      alt="227 Greymon Dr — a delivered GDR residence in West Palm Beach"
                       fill
                       sizes="(min-width: 1024px) 45vw, 100vw"
                       className="object-cover"
@@ -81,9 +81,26 @@ export default function ContactPage() {
               </Reveal>
             </div>
 
-            <Suspense fallback={<div className="min-h-[420px] border border-line bg-ink-2" aria-hidden />}>
-              <InquiryForm />
-            </Suspense>
+            <div>
+              <Suspense fallback={<div className="min-h-[420px] border border-line bg-ink-2" aria-hidden />}>
+                <InquiryForm />
+              </Suspense>
+              <Reveal delay={0.1} className="mt-8">
+                <p className="label text-faint">What happens next</p>
+                <ol className="mt-4 flex flex-col gap-3">
+                  {[
+                    "Your inquiry lands on the developer's desk — not in a CRM queue.",
+                    "You get a direct conversation. No handoffs, no scripts.",
+                    "When you're ready, we walk the residence together.",
+                  ].map((step, i) => (
+                    <li key={step} className="flex items-baseline gap-4 border-b border-line pb-3">
+                      <span className="label text-green">{String(i + 1).padStart(2, "0")}</span>
+                      <span className="text-mist">{step}</span>
+                    </li>
+                  ))}
+                </ol>
+              </Reveal>
+            </div>
           </div>
         </div>
       </section>

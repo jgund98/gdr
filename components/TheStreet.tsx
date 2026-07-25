@@ -74,7 +74,7 @@ export default function TheStreet() {
         <div className="flex flex-wrap items-end justify-between gap-6">
           <SectionHead
             tone="paper"
-            index="03"
+            index="04"
             tag="Greymon Drive"
             lines={[
               "ONE STREET.",

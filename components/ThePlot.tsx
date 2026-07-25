@@ -54,7 +54,7 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
         {!compact && (
           <SectionHead
             tone="paper"
-            index="01"
+            index="02"
             tag="The Plot"
             lines={[
               "WHERE CONVICTION",
@@ -66,9 +66,9 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
           />
         )}
 
-        <div className={cn("grid gap-10 lg:grid-cols-12", compact ? "" : "mt-14")}>
+        <div className={cn("grid gap-10 lg:grid-cols-2", compact ? "" : "mt-14")}>
           {/* the drawing */}
-          <Reveal className="lg:col-span-7">
+          <Reveal>
             <div className="relative border border-ink/15 bg-paper shadow-[0_30px_80px_rgba(11,14,9,0.12)]">
               <svg viewBox="0 0 900 840" className="block w-full" role="img" aria-label="Diagrammatic survey map of West Palm Beach with GDR residences pinned">
                 <defs>
@@ -215,9 +215,9 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
             </div>
           </Reveal>
 
-          {/* the record panel + the index */}
-          <div className="lg:col-span-5">
-            <div className="flex h-full flex-col lg:sticky lg:top-24">
+          {/* the record panel + the index — the twin sheet */}
+          <div>
+            <div className="flex h-full flex-col border border-ink/15 bg-paper p-6 shadow-[0_30px_80px_rgba(11,14,9,0.12)] md:p-8">
               <AnimatePresence mode="wait" initial={false}>
                 {p && (
                   <motion.div
@@ -250,7 +250,7 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
               </AnimatePresence>
 
               {/* the index — every pin, one row each */}
-              <ul className="mt-8 border-t border-ink/15">
+              <ul className="mt-8 flex-1 border-t border-ink/15">
                 {allSlugs.map((slug) => {
                   const item = bySlug(slug);
                   if (!item) return null;

@@ -31,7 +31,7 @@ export default function TheTurn() {
     <section className="relative overflow-hidden bg-ink-2 py-24 md:py-32">
       <div className="glow-tl relative mx-auto max-w-7xl px-5 md:px-8">
         <SectionHead
-          index="02"
+          index="03"
           tag="The Turn"
           lines={[
             "WE BUY THE HOUSE",

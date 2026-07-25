@@ -30,7 +30,7 @@ export default function DeveloperBlock() {
 
           <div className="lg:col-span-7 lg:pl-6">
             <SectionHead
-              index="08"
+              index="09"
               tag="The Developer"
               lines={[
                 "THE DEVELOPER",

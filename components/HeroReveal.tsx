@@ -212,12 +212,17 @@ export default function HeroReveal() {
         {/* the words — landing as the sheet parts, drifting out on descent */}
         <div ref={wordsRef} className="relative z-10 mx-auto flex h-full max-w-7xl flex-col justify-end px-5 pb-20 will-change-transform md:px-8 md:pb-28">
           <motion.p
-            className="label mb-5 text-green"
+            className="mb-5 flex flex-wrap items-center gap-3"
             initial={reduced ? false : { opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: reduced ? 0 : 1.55, duration: 0.6 }}
           >
-            Luxury Development — West Palm Beach — Est. 1997
+            <span className="label chamfer-sm bg-green px-3.5 py-2 text-ink">
+              Luxury Real Estate Development
+            </span>
+            <span className="label text-paper/90 [text-shadow:0_1px_10px_rgba(11,14,9,0.9)]">
+              West Palm Beach — Est. 1997
+            </span>
           </motion.p>
           <RevealLines
             as="h1"
@@ -235,10 +240,9 @@ export default function HeroReveal() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: reduced ? 0 : 1.95, duration: 0.6 }}
           >
-            <p className="mt-4 max-w-xl text-base leading-relaxed text-mist md:mt-6 md:max-w-2xl md:text-xl">
-              A limited collection of historic rebuilds and ground-up residences
-              across El&nbsp;Cid, Flamingo&nbsp;Park, and the South&nbsp;End —
-              developed start to finish by Gus&nbsp;Renny, sold&nbsp;direct.
+            <p className="mt-4 max-w-xl text-base leading-relaxed text-paper/95 [text-shadow:0_2px_20px_rgba(11,14,9,0.9),0_1px_4px_rgba(11,14,9,0.7)] md:mt-6 md:text-xl">
+              A limited collection in West&nbsp;Palm&nbsp;Beach's most protected
+              neighborhoods — sold direct by the&nbsp;developer.
             </p>
             <div className="mt-6 flex flex-wrap gap-3 md:mt-8 md:gap-4">
               <Btn href="/residences">View the Residences</Btn>

@@ -34,7 +34,7 @@ const partners = [
   },
 ] as const;
 
-export default function Partners({ index = "09" }: { index?: string }) {
+export default function Partners({ index = "10" }: { index?: string }) {
   return (
     <section id="partners" className="relative overflow-hidden bg-paper py-24 text-ink md:py-32">
       <PalmShadow className="right-[-7%] top-[-5%] h-[420px] w-[420px] opacity-20 md:h-[600px] md:w-[600px]" flip delay={1} />

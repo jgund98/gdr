@@ -3,89 +3,91 @@
 import { motion, useReducedMotion } from "motion/react";
 import Btn from "@/components/Btn";
 import Reveal from "@/components/Reveal";
-import SectionHead from "@/components/SectionHead";
-import { FloorPlan } from "@/components/PlanArt";
+import Mark from "@/components/Mark";
 import { site } from "@/lib/site";
 
-const cutOut = ["The listing theater", "The staging games", "The spec-flip markup"] as const;
+const cutOut = ["the listing theater", "the staging games", "the spec-flip markup"] as const;
 
 /**
- * Buy Direct — one green line from the developer to the buyer,
- * with everything in between struck through.
+ * Buy Direct — one measured line from the developer to the buyer, drawn
+ * across the whole section, with everything in between struck through at
+ * display scale. No cards, no columns; a statement.
  */
 export default function BuyDirect() {
   const reduced = useReducedMotion();
 
   return (
-    <section className="relative overflow-hidden bg-ink-2 py-24 md:py-32">
-      <div className="relative mx-auto max-w-7xl px-5 md:px-8">
-        <div className="grid gap-14 lg:grid-cols-2 lg:gap-10">
-          <SectionHead
-            index="06"
-            tag="Buy Direct"
-            lines={[
-              "NO ONE BETWEEN",
-              <span key="l2">
-                US AND <em className="text-green">you.</em>
-              </span>,
-            ]}
-            lede={
-              <>
-                Through a strategic partnership with Renny&nbsp;Realty, GDR homes
-                sell direct from the developer — clearer pricing, cleaner terms,
-                and answers from the person who actually built the house.
-              </>
-            }
-          />
+    <section className="relative overflow-hidden bg-ink-2 py-24 md:py-36">
+      <div className="glow-br relative mx-auto max-w-7xl px-5 md:px-8">
+        <Reveal>
+          <p className="flex items-center gap-2.5">
+            <Mark className="h-3.5 w-auto text-green" />
+            <span className="tag-index">07 — Buy Direct</span>
+          </p>
+        </Reveal>
 
-          <div className="flex flex-col justify-center">
-            <Reveal>
-              <div className="relative overflow-hidden border border-line bg-ink p-7 md:p-10">
-                <div className="pointer-events-none absolute -right-16 -top-10 w-[420px] opacity-[0.08]" aria-hidden>
-                  <FloorPlan tone="green" />
-                </div>
-                <div className="relative flex items-center justify-between gap-4">
-                  <span className="display text-2xl md:text-3xl">The Developer</span>
-                  <motion.span
-                    className="relative mx-1 h-px flex-1 origin-left bg-green"
-                    initial={reduced ? false : { scaleX: 0 }}
-                    whileInView={{ scaleX: 1 }}
-                    viewport={{ once: true, margin: "-80px" }}
-                    transition={{ delay: 0.5, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-                    aria-hidden
-                  />
-                  <span className="display text-2xl text-green md:text-3xl">You</span>
-                </div>
-                <ul className="relative mt-8 flex flex-col gap-4 border-t border-line pt-7">
-                  {cutOut.map((item, i) => (
-                    <li key={item} className="relative w-fit text-lg text-faint">
-                      {item}
-                      <motion.span
-                        className="absolute left-0 top-1/2 h-[2px] w-full origin-left bg-green/80"
-                        initial={reduced ? false : { scaleX: 0 }}
-                        whileInView={{ scaleX: 1 }}
-                        viewport={{ once: true, margin: "-80px" }}
-                        transition={{ delay: 0.9 + i * 0.18, duration: 0.4, ease: "easeOut" }}
-                        aria-hidden
-                      />
-                    </li>
-                  ))}
-                </ul>
-                <div className="relative mt-9 flex flex-wrap items-center gap-5">
-                  <Btn href="/contact">Start the Conversation</Btn>
-                  <a
-                    href={site.rennyRealtyUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="navline label pb-1 text-paper/70 hover:text-paper"
-                  >
-                    Renny Realty&ensp;↗
-                  </a>
-                </div>
-              </div>
-            </Reveal>
+        {/* the line itself: developer ——◆—— you */}
+        <div className="mt-10 flex items-center gap-5 md:mt-14 md:gap-8">
+          <Reveal>
+            <h2 className="display whitespace-nowrap text-4xl sm:text-5xl lg:text-7xl">THE DEVELOPER</h2>
+          </Reveal>
+          <div className="relative h-[2px] flex-1 overflow-visible">
+            <motion.div
+              className="h-full origin-left bg-green shadow-[0_0_14px_rgba(137,191,88,0.7)]"
+              initial={reduced ? false : { scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ delay: 0.35, duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+            />
+            <motion.span
+              className="absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rotate-45 bg-green"
+              initial={reduced ? false : { opacity: 0, scale: 0 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ delay: 1.0, duration: 0.3 }}
+              aria-hidden
+            />
           </div>
+          <Reveal delay={0.1}>
+            <h2 className="display whitespace-nowrap text-4xl text-green sm:text-5xl lg:text-7xl">YOU.</h2>
+          </Reveal>
         </div>
+
+        {/* what the line cuts out — struck at size */}
+        <div className="mt-12 flex flex-col gap-2 md:mt-16">
+          {cutOut.map((item, i) => (
+            <Reveal key={item} delay={0.08 * i}>
+              <p className="relative w-fit font-serif text-3xl italic text-paper/35 sm:text-4xl lg:text-5xl">
+                {item}
+                <motion.span
+                  className="absolute left-[-2%] top-1/2 h-[3px] w-[104%] origin-left bg-green/90"
+                  initial={reduced ? false : { scaleX: 0 }}
+                  whileInView={{ scaleX: 1 }}
+                  viewport={{ once: true, margin: "-80px" }}
+                  transition={{ delay: 0.5 + i * 0.22, duration: 0.35, ease: "easeOut" }}
+                  aria-hidden
+                />
+              </p>
+            </Reveal>
+          ))}
+        </div>
+
+        <Reveal delay={0.15} className="mt-12 flex flex-wrap items-center gap-x-8 gap-y-5 md:mt-16">
+          <Btn href="/contact">Start the Conversation</Btn>
+          <p className="max-w-md text-sm leading-relaxed text-mist">
+            Through a strategic partnership with{" "}
+            <a
+              href={site.rennyRealtyUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="border-b border-green/50 text-paper/85 transition-colors hover:border-green hover:text-paper"
+            >
+              Renny&nbsp;Realty
+            </a>
+            , GDR homes sell direct — clearer pricing, cleaner terms, answers
+            from the person who built the house.
+          </p>
+        </Reveal>
       </div>
     </section>
   );

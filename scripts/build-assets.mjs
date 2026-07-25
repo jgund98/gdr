@@ -49,7 +49,8 @@ const galleries = {
   "greymon-227": Array.from({ length: 10 }, (_, i) => `Bg-Residences-227-Greymon-${i + 1}`),
   "washington-3609": Array.from({ length: 10 }, (_, i) => `Bg-Residences-3609-Washington-${i + 1}`),
   "linda-flora-2179": Array.from({ length: 16 }, (_, i) => `Bg-Residences-2179-Linda-${i + 1}`),
-  "marlay-1501": Array.from({ length: 4 }, (_, i) => `Bg-Residences-2179-Marley-${i + 1}`),
+  // Marley-1 is a 658px square — too soft to ship anywhere. Lead with the aerial.
+  "marlay-1501": ["Bg-Residences-2179-Marley-2", "Bg-Residences-2179-Marley-4", "Bg-Residences-2179-Marley-3"],
   "kanuga-707": ["Bg-Residences-Kanuga-1", "Bg-Residences-Kanuga-2"],
 };
 
