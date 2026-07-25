@@ -101,7 +101,12 @@ export default async function PropertyPage({
             ))}
           </div>
           <Reveal className="lg:col-span-4 lg:col-start-9">
-            <div className="border border-line bg-ink-2 p-7">
+            <div className="relative border border-line bg-ink-2 p-7">
+              {/* plan-corner ticks — the record reads like a title block */}
+              <span className="absolute left-2 top-2 h-3 w-3 border-l border-t border-green/60" aria-hidden />
+              <span className="absolute right-2 top-2 h-3 w-3 border-r border-t border-green/60" aria-hidden />
+              <span className="absolute bottom-2 left-2 h-3 w-3 border-b border-l border-green/60" aria-hidden />
+              <span className="absolute bottom-2 right-2 h-3 w-3 border-b border-r border-green/60" aria-hidden />
               <p className="tag-index">The record</p>
               <dl className="mt-5 flex flex-col gap-4 text-sm">
                 <div className="flex justify-between gap-4 border-b border-line pb-4">

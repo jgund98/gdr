@@ -31,7 +31,7 @@ export default function TheTurn() {
     <section className="relative overflow-hidden bg-ink-2 py-24 md:py-32">
       <div className="glow-tl relative mx-auto max-w-7xl px-5 md:px-8">
         <SectionHead
-          index="03"
+          index="02"
           tag="The Turn"
           lines={[
             "WE BUY THE HOUSE",
@@ -68,13 +68,15 @@ export default function TheTurn() {
             onPointerUp={() => (dragging.current = false)}
             onPointerCancel={() => (dragging.current = false)}
           >
-            {/* as found — the honest layer underneath */}
+            {/* as found — the honest layer underneath, reframed so the
+                cottage sits at roughly the render's scale */}
             <Image
-              src="/properties/greymon-335/08.webp"
+              src="/properties/greymon-335/03.webp"
               alt="335 Greymon Dr as acquired — the original worn cottage"
               fill
               sizes="(min-width: 1280px) 1216px, 100vw"
-              className="object-cover"
+              className="scale-[1.55] object-cover"
+              style={{ transformOrigin: "53% 44%", objectPosition: "53% 44%" }}
               draggable={false}
             />
             {/* the plan — clipped to the left of the line */}

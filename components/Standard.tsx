@@ -3,6 +3,7 @@
 import { motion, useReducedMotion } from "motion/react";
 import SectionHead from "@/components/SectionHead";
 import Reveal from "@/components/Reveal";
+import { FloorPlan } from "@/components/PlanArt";
 
 /**
  * The Standard — what "developer-led" actually costs us, as six stamped
@@ -41,10 +42,14 @@ export default function Standard() {
   return (
     <section className="relative overflow-hidden bg-paper py-24 text-ink md:py-32">
       <div className="survey-ink pointer-events-none absolute inset-0 opacity-50" aria-hidden />
+      {/* the plan behind the standard — drawn as you arrive */}
+      <div className="pointer-events-none absolute -right-24 top-10 hidden w-[560px] opacity-[0.16] lg:block xl:w-[640px]">
+        <FloorPlan tone="ink" delay={0.2} />
+      </div>
       <div className="relative mx-auto max-w-7xl px-5 md:px-8">
         <SectionHead
           tone="paper"
-          index="06"
+          index="05"
           tag="The Standard"
           lines={[
             "ASK WHO'S",

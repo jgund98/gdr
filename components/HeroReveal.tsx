@@ -67,7 +67,7 @@ export default function HeroReveal() {
         wordsRef.current.style.opacity = String(clamp(1 - p * 2.4));
         wordsRef.current.style.transform = `translateY(${-p * 14}vh)`;
       }
-      if (tickerRef.current) tickerRef.current.style.opacity = String(clamp(1 - p * 3));
+      if (tickerRef.current) tickerRef.current.style.opacity = String(clamp(1 - p * 1.2));
       if (cueRef.current) cueRef.current.style.opacity = String(clamp(1 - p * 5));
       if (fadeRef.current) fadeRef.current.style.opacity = String(clamp((p - 0.72) / 0.28) * 0.92);
       if (svgRef.current) svgRef.current.style.opacity = String(clamp(p * 4) * clamp((1 - p) * 6));
@@ -91,9 +91,9 @@ export default function HeroReveal() {
     <section
       ref={wrapRef}
       aria-label="GDR Development"
-      className={reduced ? "relative h-[100svh] min-h-[560px]" : "relative h-[240svh]"}
+      className={reduced ? "relative h-[100svh] min-h-[520px]" : "relative h-[240svh]"}
     >
-      <div className="sticky top-0 h-[100svh] min-h-[560px] overflow-hidden">
+      <div className="sticky top-0 h-[100svh] min-h-[520px] overflow-hidden">
         {/* the city — West Palm Beach from above, running to the Intracoastal */}
         <div ref={zoomRef} className="absolute inset-0 will-change-transform" style={{ transformOrigin: "50% 64%" }}>
           <video
@@ -210,7 +210,7 @@ export default function HeroReveal() {
         )}
 
         {/* the words — landing as the sheet parts, drifting out on descent */}
-        <div ref={wordsRef} className="relative z-10 mx-auto flex h-full max-w-7xl flex-col justify-end px-5 pb-24 will-change-transform md:px-8 md:pb-28">
+        <div ref={wordsRef} className="relative z-10 mx-auto flex h-full max-w-7xl flex-col justify-end px-5 pb-20 will-change-transform md:px-8 md:pb-28">
           <motion.p
             className="label mb-5 text-green"
             initial={reduced ? false : { opacity: 0, y: 14 }}
@@ -222,7 +222,7 @@ export default function HeroReveal() {
           <RevealLines
             as="h1"
             delay={reduced ? 0 : 1.68}
-            className="text-[13.2vw] leading-[0.98] sm:text-[11vw] lg:text-[7.6rem] xl:text-[8.6rem]"
+            className="text-[12.5vw] leading-[0.98] sm:text-[10.5vw] md:text-[9vw] lg:text-[7.2rem] xl:text-[8.2rem] 2xl:text-[9rem]"
             lines={[
               "THE BEST HOUSE",
               <span key="l2">
@@ -235,12 +235,12 @@ export default function HeroReveal() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: reduced ? 0 : 1.95, duration: 0.6 }}
           >
-            <p className="lede mt-6 max-w-2xl text-mist">
+            <p className="mt-4 max-w-xl text-base leading-relaxed text-mist md:mt-6 md:max-w-2xl md:text-xl">
               A limited collection of historic rebuilds and ground-up residences
               across El&nbsp;Cid, Flamingo&nbsp;Park, and the South&nbsp;End —
               developed start to finish by Gus&nbsp;Renny, sold&nbsp;direct.
             </p>
-            <div className="mt-8 flex flex-wrap gap-4">
+            <div className="mt-6 flex flex-wrap gap-3 md:mt-8 md:gap-4">
               <Btn href="/residences">View the Residences</Btn>
               <Btn href="/contact" variant="outline">
                 Inquire Directly

@@ -4,6 +4,7 @@ import { motion, useReducedMotion } from "motion/react";
 import Btn from "@/components/Btn";
 import Reveal from "@/components/Reveal";
 import SectionHead from "@/components/SectionHead";
+import { FloorPlan } from "@/components/PlanArt";
 import { site } from "@/lib/site";
 
 const cutOut = ["The listing theater", "The staging games", "The spec-flip markup"] as const;
@@ -20,7 +21,7 @@ export default function BuyDirect() {
       <div className="relative mx-auto max-w-7xl px-5 md:px-8">
         <div className="grid gap-14 lg:grid-cols-2 lg:gap-10">
           <SectionHead
-            index="07"
+            index="06"
             tag="Buy Direct"
             lines={[
               "NO ONE BETWEEN",
@@ -39,8 +40,11 @@ export default function BuyDirect() {
 
           <div className="flex flex-col justify-center">
             <Reveal>
-              <div className="border border-line bg-ink p-7 md:p-10">
-                <div className="flex items-center justify-between gap-4">
+              <div className="relative overflow-hidden border border-line bg-ink p-7 md:p-10">
+                <div className="pointer-events-none absolute -right-16 -top-10 w-[420px] opacity-[0.08]" aria-hidden>
+                  <FloorPlan tone="green" />
+                </div>
+                <div className="relative flex items-center justify-between gap-4">
                   <span className="display text-2xl md:text-3xl">The Developer</span>
                   <motion.span
                     className="relative mx-1 h-px flex-1 origin-left bg-green"
@@ -52,7 +56,7 @@ export default function BuyDirect() {
                   />
                   <span className="display text-2xl text-green md:text-3xl">You</span>
                 </div>
-                <ul className="mt-8 flex flex-col gap-4 border-t border-line pt-7">
+                <ul className="relative mt-8 flex flex-col gap-4 border-t border-line pt-7">
                   {cutOut.map((item, i) => (
                     <li key={item} className="relative w-fit text-lg text-faint">
                       {item}
@@ -67,7 +71,7 @@ export default function BuyDirect() {
                     </li>
                   ))}
                 </ul>
-                <div className="mt-9 flex flex-wrap items-center gap-5">
+                <div className="relative mt-9 flex flex-wrap items-center gap-5">
                   <Btn href="/contact">Start the Conversation</Btn>
                   <a
                     href={site.rennyRealtyUrl}

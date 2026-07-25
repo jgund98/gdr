@@ -20,6 +20,7 @@ const stops = ["greymon-227", "greymon-309", "greymon-317", "greymon-335"] as co
 export default function TheStreet() {
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const [progress, setProgress] = useState(0);
+  const drag = useRef({ down: false, startX: 0, startLeft: 0, moved: false });
 
   useEffect(() => {
     const el = scrollerRef.current;
@@ -33,6 +34,39 @@ export default function TheStreet() {
     return () => el.removeEventListener("scroll", onScroll);
   }, []);
 
+  // mouse users get real grab-and-drag; a dragged release swallows the click
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== "mouse") return;
+    const el = scrollerRef.current;
+    if (!el) return;
+    drag.current = { down: true, startX: e.clientX, startLeft: el.scrollLeft, moved: false };
+    el.style.scrollSnapType = "none";
+  };
+  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const el = scrollerRef.current;
+    if (!el || !drag.current.down) return;
+    const dx = e.clientX - drag.current.startX;
+    if (Math.abs(dx) > 6) drag.current.moved = true;
+    el.scrollLeft = drag.current.startLeft - dx;
+  };
+  const endDrag = () => {
+    drag.current.down = false;
+    const el = scrollerRef.current;
+    if (el) el.style.scrollSnapType = "";
+  };
+  const onClickCapture = (e: React.MouseEvent) => {
+    if (drag.current.moved) {
+      e.preventDefault();
+      e.stopPropagation();
+      drag.current.moved = false;
+    }
+  };
+  const nudge = (dir: 1 | -1) => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    el.scrollBy({ left: dir * el.clientWidth * 0.6, behavior: "smooth" });
+  };
+
   return (
     <section className="relative overflow-hidden bg-paper py-24 text-ink md:py-32">
       <PalmShadow className="left-[-10%] top-[-6%] h-[420px] w-[420px] opacity-20 md:h-[600px] md:w-[600px]" />
@@ -40,7 +74,7 @@ export default function TheStreet() {
         <div className="flex flex-wrap items-end justify-between gap-6">
           <SectionHead
             tone="paper"
-            index="04"
+            index="03"
             tag="Greymon Drive"
             lines={[
               "ONE STREET.",
@@ -51,7 +85,25 @@ export default function TheStreet() {
             lede="When we believe in a street, we don't buy once. Travel Greymon Drive — every stop is ours."
           />
           <Reveal>
-            <p className="label hidden text-ink/40 lg:block">Drag sideways ⟷</p>
+            <div className="hidden items-center gap-3 lg:flex">
+              <p className="label text-ink/40">Drag or walk ⟷</p>
+              <button
+                type="button"
+                aria-label="Previous stop on Greymon Drive"
+                onClick={() => nudge(-1)}
+                className="flex h-11 w-11 items-center justify-center border border-ink/20 text-ink transition-colors hover:bg-moss hover:text-paper chamfer-sm"
+              >
+                ←
+              </button>
+              <button
+                type="button"
+                aria-label="Next stop on Greymon Drive"
+                onClick={() => nudge(1)}
+                className="flex h-11 w-11 items-center justify-center border border-ink/20 text-ink transition-colors hover:bg-moss hover:text-paper chamfer-sm"
+              >
+                →
+              </button>
+            </div>
           </Reveal>
         </div>
       </div>
@@ -60,8 +112,13 @@ export default function TheStreet() {
         {/* the street itself */}
         <div
           ref={scrollerRef}
-          className="scrollbar-none flex snap-x snap-mandatory gap-0 overflow-x-auto pb-6"
+          className="scrollbar-none flex cursor-grab snap-x snap-mandatory gap-0 overflow-x-auto pb-6 active:cursor-grabbing"
           style={{ scrollbarWidth: "none" }}
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={endDrag}
+          onPointerLeave={endDrag}
+          onClickCapture={onClickCapture}
         >
           {/* lead-in: the street sign */}
           <div className="flex w-[14vw] min-w-[80px] shrink-0 items-end lg:w-[22vw]">

@@ -4,8 +4,9 @@ import Reveal from "@/components/Reveal";
 import PalmShadow from "@/components/PalmShadow";
 
 /**
- * The Bench — the specialists GDR actually builds with, shown as people,
- * not a logo wall. Real portraits and marks from their own firms.
+ * The Bench — the specialists GDR actually builds with. Marks only, on
+ * matched survey plates: their real logo where one exists, a set monogram
+ * where it doesn't. No mismatched headshots, no stock faces.
  */
 const partners = [
   {
@@ -20,7 +21,6 @@ const partners = [
     firm: "Smith Kellogg Architecture",
     role: "Historic Preservation Architecture",
     note: "The conscience — what the neighborhood protects, she protects first.",
-    photo: "/partners/kristin-kellogg.webp",
     logo: "/partners/smith-kellogg-logo.png",
     url: "https://www.smithkellogg.com/",
   },
@@ -29,12 +29,12 @@ const partners = [
     firm: "Gengler Architects, Inc.",
     role: "Classic South Florida Architecture",
     note: "The language — Mediterranean, Mission, and coastal, spoken natively.",
-    photo: "/partners/david-gengler.webp",
+    monogram: "GA",
     url: "https://www.genglerarchitects.com/",
   },
 ] as const;
 
-export default function Partners({ index = "10" }: { index?: string }) {
+export default function Partners({ index = "09" }: { index?: string }) {
   return (
     <section id="partners" className="relative overflow-hidden bg-paper py-24 text-ink md:py-32">
       <PalmShadow className="right-[-7%] top-[-5%] h-[420px] w-[420px] opacity-20 md:h-[600px] md:w-[600px]" flip delay={1} />
@@ -55,52 +55,50 @@ export default function Partners({ index = "10" }: { index?: string }) {
         <div className="mt-14 grid gap-6 lg:grid-cols-3">
           {partners.map((pt, i) => {
             const media = (
-              <div className="relative aspect-[4/5] overflow-hidden bg-[#e8ecdd]">
-                {"photo" in pt && pt.photo ? (
+              <div className="survey-ink relative flex aspect-[16/9] items-center justify-center overflow-hidden border-b border-ink/10 bg-[#eef1e4] transition-colors duration-500 group-hover:bg-[#e9edda]">
+                {"logo" in pt && pt.logo ? (
                   <Image
-                    src={pt.photo}
-                    alt={pt.name}
-                    fill
-                    sizes="(min-width: 1024px) 30vw, 100vw"
-                    className="object-cover object-top transition-transform duration-700 group-hover:scale-[1.04]"
+                    src={pt.logo}
+                    alt={`${pt.firm} logo`}
+                    width={256}
+                    height={256}
+                    className="h-24 w-24 object-contain transition-transform duration-500 group-hover:scale-105 md:h-28 md:w-28"
                   />
                 ) : (
-                  <div className="survey-ink absolute inset-0 flex items-center justify-center">
-                    <span className="font-serif text-8xl italic text-moss">
-                      {pt.monogram}
-                    </span>
-                  </div>
-                )}
-                {"logo" in pt && pt.logo && (
-                  <span className="absolute bottom-4 right-4 flex h-14 w-14 items-center justify-center bg-paper/90 p-2 backdrop-blur-sm">
-                    <Image src={pt.logo} alt={`${pt.firm} logo`} width={44} height={44} className="h-auto w-full" />
+                  <span className="font-serif text-7xl italic leading-none text-moss transition-transform duration-500 group-hover:scale-105 md:text-8xl">
+                    {"monogram" in pt ? pt.monogram : ""}
                   </span>
                 )}
+                <span className="label absolute bottom-3 right-4 text-ink/30">{String(i + 1).padStart(2, "0")}</span>
               </div>
             );
             const body = (
-              <>
-                <p className="label mt-6 text-moss">{pt.role}</p>
-                <p className="display mt-2 text-2xl md:text-[1.65rem]">{pt.name}</p>
+              <div className="flex flex-1 flex-col p-7 md:p-8">
+                <p className="label text-moss">{pt.role}</p>
+                <p className="display mt-3 text-2xl md:text-[1.6rem]">{pt.name}</p>
                 <p className="mt-1 text-ink/60">{pt.firm}</p>
-                <p className="mt-4 text-sm leading-relaxed text-ink/60">{pt.note}</p>
-                {"url" in pt && pt.url && (
-                  <p className="label mt-5 text-moss transition-colors group-hover:text-ink">Visit ↗</p>
+                <p className="mt-4 flex-1 text-sm leading-relaxed text-ink/60">{pt.note}</p>
+                {"url" in pt && pt.url ? (
+                  <p className="label mt-6 text-moss transition-colors group-hover:text-ink">Visit ↗</p>
+                ) : (
+                  <p className="label mt-6 text-ink/30">West Palm Beach</p>
                 )}
-              </>
+              </div>
+            );
+            const card = (
+              <div className="flex h-full flex-col border border-ink/15 bg-paper transition-colors duration-300 hover:border-moss/50">
+                {media}
+                {body}
+              </div>
             );
             return (
               <Reveal key={pt.name} delay={0.07 * i}>
                 {"url" in pt && pt.url ? (
-                  <a href={pt.url} target="_blank" rel="noopener noreferrer" className="group block">
-                    <div className="plate plate-ink">{media}</div>
-                    {body}
+                  <a href={pt.url} target="_blank" rel="noopener noreferrer" className="group block h-full">
+                    {card}
                   </a>
                 ) : (
-                  <div className="group">
-                    <div className="plate plate-ink">{media}</div>
-                    {body}
-                  </div>
+                  <div className="group h-full">{card}</div>
                 )}
               </Reveal>
             );

@@ -1,6 +1,5 @@
 import HeroReveal from "@/components/HeroReveal";
-import StatsBand from "@/components/StatsBand";
-import ChapterScroll from "@/components/ChapterScroll";
+import Stats from "@/components/Stats";
 import ThePlot from "@/components/ThePlot";
 import TheTurn from "@/components/TheTurn";
 import TheStreet from "@/components/TheStreet";
@@ -18,17 +17,16 @@ export default function Home() {
   return (
     <>
       <HeroReveal />
-      <StatsBand />
-      <ChapterScroll />
+      <Stats />
       <ThePlot />
       <TheTurn />
       <TheStreet />
 
-      {/* № 05 — the film */}
+      {/* № 04 — the film */}
       <section className="relative overflow-hidden bg-ink-2 py-24 md:py-32">
         <div className="relative mx-auto max-w-7xl px-5 md:px-8">
           <SectionHead
-            index="05"
+            index="04"
             tag="The Film"
             lines={[
               "WALK A FINISHED",

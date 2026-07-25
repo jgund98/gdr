@@ -4,6 +4,7 @@ import Reveal from "@/components/Reveal";
 import SectionHead from "@/components/SectionHead";
 import Btn from "@/components/Btn";
 import Partners from "@/components/Partners";
+import { PlanIcon } from "@/components/PlanArt";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -15,18 +16,22 @@ export const metadata: Metadata = {
 const principles = [
   {
     title: "Respect for character",
+    icon: "facade",
     body: "Defining architectural elements stay. Systems and finishes don't. Every decision honors the home's roots and the integrity of the street around it.",
   },
   {
     title: "Structure first",
+    icon: "section",
     body: "Foundations reinforced, circulation and natural light improved, the whole frame made stronger. A house should feel grounded before it feels beautiful.",
   },
   {
     title: "Design with purpose",
+    icon: "flow",
     body: "Rooms redrawn for how people actually live — efficient layouts, honest flow, no wasted space. Materials picked for comfort and decades of use.",
   },
   {
     title: "The developer on site",
+    icon: "level",
     body: "Gus stays personally involved in every phase, backed by a loyal team — never rotating crews. One standard, held from demolition to delivery.",
   },
 ] as const;
@@ -64,13 +69,14 @@ export default function PracticePage() {
               <div className="plate">
                 <div className="relative aspect-[4/5] overflow-hidden">
                   <Image
-                    src="/site/gus-plans.webp"
+                    src="/site/gus-hq.webp"
                     alt="Gus Renny standing inside a gutted historic home, holding plans"
                     fill
                     priority
+                    quality={90}
                     sizes="(min-width: 1024px) 40vw, 100vw"
                     className="object-cover"
-                    style={{ objectPosition: "50% 22%" }}
+                    style={{ objectPosition: "50% 18%" }}
                   />
                 </div>
               </div>
@@ -88,6 +94,20 @@ export default function PracticePage() {
             <p className="display mt-4 text-3xl sm:text-4xl">
               CENTURY HOTEL TO <em className="text-green">el cid.</em>
             </p>
+            <div className="plate mt-10">
+              <div className="relative aspect-[4/3] overflow-hidden">
+                <Image
+                  src="/site/miami-marina.webp"
+                  alt="Miami Beach from above — where the record began"
+                  fill
+                  sizes="(min-width: 1024px) 30vw, 100vw"
+                  className="object-cover"
+                />
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/80 to-transparent p-4 pt-12">
+                  <p className="label text-paper/85">Miami — where the record began</p>
+                </div>
+              </div>
+            </div>
           </Reveal>
           <div className="lg:col-span-7 lg:col-start-6">
             <Reveal>
@@ -133,7 +153,10 @@ export default function PracticePage() {
             {principles.map((pr, i) => (
               <Reveal key={pr.title} delay={0.06 * i} className="bg-ink">
                 <div className="group h-full p-7 transition-colors hover:bg-ink-2 md:p-10">
-                  <p className="label text-green">{String(i + 1).padStart(2, "0")}</p>
+                  <div className="flex items-start justify-between gap-4">
+                    <p className="label text-green">{String(i + 1).padStart(2, "0")}</p>
+                    <PlanIcon kind={pr.icon} className="h-14 w-14 opacity-80 transition-opacity group-hover:opacity-100" />
+                  </div>
                   <h3 className="display mt-4 text-2xl md:text-3xl">{pr.title}</h3>
                   <p className="mt-4 leading-relaxed text-mist">{pr.body}</p>
                 </div>

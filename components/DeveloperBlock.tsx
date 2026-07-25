@@ -13,12 +13,13 @@ export default function DeveloperBlock() {
             <div className="plate">
               <div className="relative aspect-[4/5] overflow-hidden">
                 <Image
-                  src="/site/gus-plans.webp"
+                  src="/site/gus-hq.webp"
                   alt="Gus Renny inside a gutted historic home, plans in hand"
                   fill
+                  quality={90}
                   sizes="(min-width: 1024px) 40vw, 100vw"
                   className="object-cover"
-                  style={{ objectPosition: "50% 22%" }}
+                  style={{ objectPosition: "50% 18%" }}
                 />
               </div>
             </div>
@@ -29,7 +30,7 @@ export default function DeveloperBlock() {
 
           <div className="lg:col-span-7 lg:pl-6">
             <SectionHead
-              index="09"
+              index="08"
               tag="The Developer"
               lines={[
                 "THE DEVELOPER",

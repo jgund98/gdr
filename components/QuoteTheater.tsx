@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Reveal from "@/components/Reveal";
 import PalmShadow from "@/components/PalmShadow";
+import { FloorPlan } from "@/components/PlanArt";
 
 /** Verbatim buyer statements published by GDR — no invented names, no stock faces. */
 const words = [
@@ -39,9 +40,13 @@ export default function QuoteTheater() {
   return (
     <section className="relative overflow-hidden bg-paper py-28 text-ink md:py-36">
       <PalmShadow className="bottom-[-8%] right-[-6%] h-[380px] w-[380px] opacity-20 md:h-[560px] md:w-[560px]" flip delay={2} />
+      {/* the plan under the words */}
+      <div className="pointer-events-none absolute left-1/2 top-1/2 w-[760px] -translate-x-1/2 -translate-y-1/2 opacity-[0.06]">
+        <FloorPlan tone="ink" />
+      </div>
       <div className="relative mx-auto max-w-5xl px-5 text-center md:px-8">
         <Reveal>
-          <p className="tag-index-ink">08 — Buyer Words</p>
+          <p className="tag-index-ink">07 — Buyer Words</p>
         </Reveal>
         <div className="relative mt-10 flex min-h-[16rem] items-center justify-center md:min-h-[15rem]">
           <AnimatePresence mode="wait">
