@@ -54,7 +54,7 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
         {!compact && (
           <SectionHead
             tone="paper"
-            index="02"
+            index="01"
             tag="The Plot"
             lines={[
               "WHERE CONVICTION",
@@ -249,8 +249,8 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
                 )}
               </AnimatePresence>
 
-              {/* the index — every pin, one row each */}
-              <ul className="mt-8 flex-1 border-t border-ink/15">
+              {/* the index — every pin, two tight columns */}
+              <ul className="mt-8 grid flex-1 grid-cols-1 gap-x-8 border-t border-ink/15 sm:grid-cols-2">
                 {allSlugs.map((slug) => {
                   const item = bySlug(slug);
                   if (!item) return null;

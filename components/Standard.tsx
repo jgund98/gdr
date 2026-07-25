@@ -49,7 +49,7 @@ export default function Standard() {
       <div className="relative mx-auto max-w-7xl px-5 md:px-8">
         <SectionHead
           tone="paper"
-          index="06"
+          index="05"
           tag="The Standard"
           lines={[
             "ASK WHO'S",

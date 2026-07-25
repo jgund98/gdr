@@ -22,7 +22,7 @@ export default function BuyDirect() {
         <Reveal>
           <p className="flex items-center gap-2.5">
             <Mark className="h-3.5 w-auto text-green" />
-            <span className="tag-index">07 — Buy Direct</span>
+            <span className="tag-index">06 — Buy Direct</span>
           </p>
         </Reveal>
 

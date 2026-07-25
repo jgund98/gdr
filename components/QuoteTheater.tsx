@@ -46,7 +46,7 @@ export default function QuoteTheater() {
       </div>
       <div className="relative mx-auto max-w-5xl px-5 text-center md:px-8">
         <Reveal>
-          <p className="tag-index-ink">08 — Buyer Words</p>
+          <p className="tag-index-ink">07 — Buyer Words</p>
         </Reveal>
         <div className="relative mt-10 flex min-h-[16rem] items-center justify-center md:min-h-[15rem]">
           <AnimatePresence mode="wait">
