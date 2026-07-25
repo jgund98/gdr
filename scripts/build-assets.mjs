@@ -36,7 +36,7 @@ async function out(src, dest, width, q = 78, bottomCrop = 0) {
 
 /** galleries whose source photos carry baked listing watermarks */
 const bottomCrops = {
-  "greymon-317": 0.075,
+  "greymon-317": 0.11,
   "linda-flora-2179": 0.1,
   "marlay-1501": 0.1,
 };
