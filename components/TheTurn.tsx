@@ -143,7 +143,7 @@ export default function TheTurn() {
             See 335 Greymon
           </Btn>
           <p className="max-w-md text-sm leading-relaxed text-faint">
-            Every GDR residence page shows its full record — including the
+            Every GDR residence page tells the whole story — including the
             state we started from.
           </p>
         </Reveal>

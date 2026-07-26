@@ -44,7 +44,7 @@ export default function GroupStrip() {
         </Reveal>
         <Reveal delay={0.14}>
           <p className="mt-8 max-w-2xl leading-relaxed text-mist">
-            Development, brokerage, and a builder's record spanning three
+            Development, brokerage, and a builder's history spanning three
             decades — one family of companies behind every GDR residence.
           </p>
         </Reveal>

@@ -98,13 +98,13 @@ export default function PracticePage() {
               <div className="relative aspect-[4/3] overflow-hidden">
                 <Image
                   src="/site/miami-marina.webp"
-                  alt="Miami Beach from above — where the record began"
+                  alt="Miami Beach from above — where it all began"
                   fill
                   sizes="(min-width: 1024px) 30vw, 100vw"
                   className="object-cover"
                 />
                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/80 to-transparent p-4 pt-12">
-                  <p className="label text-paper/85">Miami — where the record began</p>
+                  <p className="label text-paper/85">Miami — where it all began</p>
                 </div>
               </div>
             </div>
@@ -113,14 +113,14 @@ export default function PracticePage() {
             <Reveal>
               <p className="lede text-paper/90">
                 Gus Renny isn't just a developer — he's a recognized name in
-                South Florida prestige real estate, with a record that runs from
+                South Florida prestige real estate, with a body of work that runs from
                 the restoration of Miami's historic Century Hotel to some of the
                 most coveted homes in Southern Florida.
               </p>
             </Reveal>
             <Reveal delay={0.1}>
               <p className="lede mt-6 text-mist">
-                GDR Development brings that record to a limited collection of
+                GDR Development brings that experience to a limited collection of
                 residences: decades of experience across acquisition,
                 construction, development, and renovation, applied one house at
                 a time — honoring architectural character while elevating the

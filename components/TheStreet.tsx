@@ -141,7 +141,7 @@ export default function TheStreet() {
                 <em className="text-moss">one slow drive.</em>
               </span>,
             ]}
-            lede="Every GDR residence, West Palm Beach to Los Angeles, gliding past in order. Tap any home to open its record."
+            lede="Every GDR residence, West Palm Beach to Los Angeles, gliding past in order. Tap any home to step inside."
           />
           <Reveal>
             <div className="hidden items-center gap-3 lg:flex">
@@ -180,7 +180,7 @@ export default function TheStreet() {
           <Btn href="/residences">View All Residences</Btn>
           <p className="max-w-md text-sm leading-relaxed text-ink/50">
             The full collection, West Palm Beach and Los Angeles — every
-            residence with its record published.
+            residence told in full.
           </p>
         </Reveal>
       </div>

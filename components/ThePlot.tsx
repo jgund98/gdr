@@ -119,7 +119,7 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
               <p className="label mt-1.5 text-ink/50">
                 {p.neighborhood} · {p.city}
               </p>
-              <p className="label mt-4 text-moss">Open the record →</p>
+              <p className="label mt-4 text-moss">See the residence →</p>
             </Link>
           </motion.div>
         )

@@ -107,7 +107,7 @@ export default async function PropertyPage({
               <span className="absolute right-2 top-2 h-3 w-3 border-r border-t border-green/60" aria-hidden />
               <span className="absolute bottom-2 left-2 h-3 w-3 border-b border-l border-green/60" aria-hidden />
               <span className="absolute bottom-2 right-2 h-3 w-3 border-b border-r border-green/60" aria-hidden />
-              <p className="tag-index">The record</p>
+              <p className="tag-index">At a glance</p>
               <dl className="mt-5 flex flex-col gap-4 text-sm">
                 <div className="flex justify-between gap-4 border-b border-line pb-4">
                   <dt className="text-faint">Address</dt>
@@ -209,7 +209,7 @@ export default async function PropertyPage({
               <p className="lede mt-5 max-w-2xl text-mist">
                 {allAsFound
                   ? "The property as acquired — before the rebuild begins. We publish the before because we're proud of the distance."
-                  : "The same lot, before the work. Every GDR residence page keeps its full record."}
+                  : "The same lot, before the work. Every GDR residence page tells the whole story."}
               </p>
             </Reveal>
             <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
