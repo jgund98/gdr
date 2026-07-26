@@ -6,6 +6,7 @@ import { motion, useInView, useReducedMotion } from "motion/react";
 import Reveal from "@/components/Reveal";
 import SectionHead from "@/components/SectionHead";
 import Btn from "@/components/Btn";
+import FilmTheater from "@/components/FilmTheater";
 
 /**
  * The Turn — 335 Greymon Dr, shown honestly: the worn cottage we bought,
@@ -28,11 +29,12 @@ export default function TheTurn() {
   };
 
   return (
-    <section className="relative overflow-hidden bg-ink-2 py-24 md:py-32">
+    <section className="relative overflow-hidden bg-ink-2 py-16 md:py-32">
       <div className="glow-tl relative mx-auto max-w-7xl px-5 md:px-8">
         <SectionHead
           index="03"
           tag="The Turn"
+          headSize="text-3xl sm:text-4xl lg:text-[3rem] xl:text-[3.4rem] 2xl:text-[3.8rem]"
           lines={[
             <span key="l1">
               THE HOUSE <em className="text-green">nobody</em> WANTS.
@@ -144,6 +146,16 @@ export default function TheTurn() {
             Every GDR residence page shows its full record — including the
             state we started from.
           </p>
+        </Reveal>
+
+        {/* the same idea, in motion — construction dissolving into delivered */}
+        <Reveal delay={0.12} className="mx-auto mt-16 max-w-4xl md:mt-20">
+          <p className="label mb-5 text-faint">And in motion — 309 Greymon Dr, framing to finished</p>
+          <FilmTheater
+            src="/videos/tour-309.mp4"
+            poster="/videos/tour-309-poster.webp"
+            label="309 Greymon Dr — framing to finished"
+          />
         </Reveal>
       </div>
     </section>

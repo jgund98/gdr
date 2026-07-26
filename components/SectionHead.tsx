@@ -16,6 +16,7 @@ export default function SectionHead({
   className,
   as = "h2",
   tone = "ink",
+  headSize,
 }: {
   index: string;
   tag: string;
@@ -24,6 +25,8 @@ export default function SectionHead({
   className?: string;
   as?: "h1" | "h2";
   tone?: "ink" | "paper";
+  /** override the heading scale when a line needs room to breathe */
+  headSize?: string;
 }) {
   return (
     <div className={cn("max-w-4xl", className)}>
@@ -38,7 +41,11 @@ export default function SectionHead({
       <RevealLines
         as={as}
         delay={0.08}
-        className={cn("mt-4 text-4xl sm:text-5xl lg:text-6xl", tone === "paper" && "text-ink")}
+        className={cn(
+          "mt-4",
+          headSize ?? "text-4xl sm:text-5xl lg:text-6xl xl:text-7xl",
+          tone === "paper" && "text-ink"
+        )}
         lines={lines}
       />
       {lede && (

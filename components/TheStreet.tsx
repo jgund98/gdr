@@ -13,10 +13,10 @@ import { bySlug } from "@/lib/properties";
 import { noWidow } from "@/lib/text";
 
 /**
- * The Street — Greymon Drive as an endless, unhurried glide past the four
- * GDR lots. It walks itself; hovering (or touching) pauses it, the arrows
- * skip ahead. Content is doubled and the scroll position wraps at the
- * halfway point, so the street never ends and nothing ever snaps.
+ * The Collection — every residence on one slow, endless drive. A pure
+ * transform marquee: nothing to grab, nothing to snap, nothing to drag out
+ * of place. Touching or hovering pauses it; the arrows ease it along.
+ * Content is doubled and the offset wraps at the halfway point.
  */
 const stops = [
   "kanuga-707",
@@ -30,51 +30,61 @@ const stops = [
 ] as const;
 
 export default function TheStreet() {
-  const scrollerRef = useRef<HTMLDivElement | null>(null);
+  const trackRef = useRef<HTMLDivElement | null>(null);
   const paused = useRef(false);
+  const pos = useRef(0);
+  const boost = useRef(0); // signed px still owed to an arrow press
   const reduced = useReducedMotion();
 
   useEffect(() => {
     if (reduced) return;
-    const el = scrollerRef.current;
-    if (!el) return;
+    const track = trackRef.current;
+    if (!track) return;
     let raf = 0;
-    const wrap = () => {
-      const half = el.scrollWidth / 2;
-      if (half <= 0) return;
-      if (el.scrollLeft >= half) el.scrollLeft -= half;
-      else if (el.scrollLeft < 0) el.scrollLeft += half;
-    };
     const loop = () => {
       raf = requestAnimationFrame(loop);
-      if (!paused.current && el.matches(":not(:hover)")) {
-        el.scrollLeft += 0.6;
+      const half = track.scrollWidth / 2;
+      if (half <= 0) return;
+      if (!paused.current) pos.current += 0.55;
+      if (boost.current !== 0) {
+        const step = Math.sign(boost.current) * Math.min(Math.abs(boost.current), 16);
+        pos.current += step;
+        boost.current -= step;
       }
-      wrap();
+      // wrap into [0, half)
+      pos.current = ((pos.current % half) + half) % half;
+      track.style.transform = `translateX(${-pos.current}px)`;
     };
     raf = requestAnimationFrame(loop);
+
     const pause = () => (paused.current = true);
     const resume = () => (paused.current = false);
-    el.addEventListener("touchstart", pause, { passive: true });
-    el.addEventListener("touchend", resume, { passive: true });
-    el.addEventListener("pointerdown", pause);
-    window.addEventListener("pointerup", resume);
+    const host = track.parentElement;
+    if (host) {
+      host.addEventListener("touchstart", pause, { passive: true });
+      host.addEventListener("touchend", resume, { passive: true });
+      host.addEventListener("touchcancel", resume, { passive: true });
+      host.addEventListener("mouseenter", pause);
+      host.addEventListener("mouseleave", resume);
+    }
     return () => {
       cancelAnimationFrame(raf);
-      el.removeEventListener("touchstart", pause);
-      el.removeEventListener("touchend", resume);
-      el.removeEventListener("pointerdown", pause);
-      window.removeEventListener("pointerup", resume);
+      if (host) {
+        host.removeEventListener("touchstart", pause);
+        host.removeEventListener("touchend", resume);
+        host.removeEventListener("touchcancel", resume);
+        host.removeEventListener("mouseenter", pause);
+        host.removeEventListener("mouseleave", resume);
+      }
     };
   }, [reduced]);
 
   const nudge = (dir: 1 | -1) => {
-    const el = scrollerRef.current;
-    if (!el) return;
-    el.scrollBy({ left: dir * el.clientWidth * 0.55, behavior: "smooth" });
+    const host = trackRef.current?.parentElement;
+    boost.current += dir * (host ? host.clientWidth * 0.55 : 420);
   };
 
-  const lot = (slug: string, i: number, clone: boolean) => {
+  const lot = (slug: string, clone: boolean) => {
     const p = bySlug(slug);
     if (!p) return null;
     return (
@@ -89,7 +99,7 @@ export default function TheStreet() {
               <div className="relative aspect-[16/11] overflow-hidden">
                 <Image
                   src={`/properties/${slug}/01.webp`}
-                  alt={clone ? "" : `${p.address}, West Palm Beach`}
+                  alt={clone ? "" : `${p.address}, ${p.city}`}
                   fill
                   sizes="(min-width: 1024px) 36vw, 80vw"
                   className="object-cover transition-transform duration-700 group-hover:scale-[1.05]"
@@ -97,14 +107,11 @@ export default function TheStreet() {
                 <StatusChip status={p.status} className="absolute left-4 top-4 z-10" />
               </div>
             </div>
-            <div className="mt-6 flex items-baseline gap-4">
-              <span className="display text-4xl text-moss/40 md:text-5xl">{String(i + 1).padStart(2, "0")}</span>
-              <div>
-                <p className="display text-2xl transition-colors group-hover:text-moss md:text-3xl">
-                  {noWidow(p.address)}
-                </p>
-                <p className="mt-2 max-w-sm text-sm leading-relaxed text-ink/60">{p.blurb}</p>
-              </div>
+            <div className="mt-6">
+              <p className="display text-2xl transition-colors group-hover:text-moss md:text-3xl">
+                {noWidow(p.address)}
+              </p>
+              <p className="mt-2 max-w-sm text-sm leading-relaxed text-ink/60">{p.blurb}</p>
             </div>
           </Link>
           {/* the survey line under the lot — tagged with its neighborhood */}
@@ -120,7 +127,7 @@ export default function TheStreet() {
   };
 
   return (
-    <section className="relative overflow-hidden bg-paper py-24 text-ink md:py-32">
+    <section className="relative overflow-hidden bg-paper py-16 text-ink md:py-32">
       <PalmShadow className="left-[-26%] top-[-8%] h-[420px] w-[420px] opacity-20 sm:left-[-15%] md:h-[600px] md:w-[600px]" />
       <div className="relative mx-auto max-w-7xl px-5 md:px-8">
         <div className="flex flex-wrap items-end justify-between gap-6">
@@ -141,7 +148,7 @@ export default function TheStreet() {
               <p className="label text-ink/40">Hover to pause</p>
               <button
                 type="button"
-                aria-label="Back up Greymon Drive"
+                aria-label="Back up the drive"
                 onClick={() => nudge(-1)}
                 className="flex h-11 w-11 items-center justify-center border border-ink/20 text-ink transition-colors hover:bg-moss hover:text-paper chamfer-sm"
               >
@@ -149,7 +156,7 @@ export default function TheStreet() {
               </button>
               <button
                 type="button"
-                aria-label="Further down Greymon Drive"
+                aria-label="Further along the drive"
                 onClick={() => nudge(1)}
                 className="flex h-11 w-11 items-center justify-center border border-ink/20 text-ink transition-colors hover:bg-moss hover:text-paper chamfer-sm"
               >
@@ -160,18 +167,15 @@ export default function TheStreet() {
         </div>
       </div>
 
-      <Reveal className="relative mt-14">
-        <div
-          ref={scrollerRef}
-          className="scrollbar-none flex overflow-x-auto pb-6"
-          style={{ scrollbarWidth: "none" }}
-        >
-          {stops.map((s, i) => lot(s, i, false))}
-          {stops.map((s, i) => lot(s, i, true))}
+      {/* the drive — overflow hidden, transform only */}
+      <Reveal className="relative mt-10 overflow-hidden md:mt-14">
+        <div ref={trackRef} className="flex w-max pb-6 will-change-transform">
+          {stops.map((s) => lot(s, false))}
+          {stops.map((s) => lot(s, true))}
         </div>
       </Reveal>
 
-      <div className="relative mx-auto mt-12 max-w-7xl px-5 md:px-8">
+      <div className="relative mx-auto mt-10 max-w-7xl px-5 md:mt-12 md:px-8">
         <Reveal className="flex flex-wrap items-center gap-x-8 gap-y-4">
           <Btn href="/residences">View All Residences</Btn>
           <p className="max-w-md text-sm leading-relaxed text-ink/50">

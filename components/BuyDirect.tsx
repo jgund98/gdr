@@ -20,7 +20,7 @@ export default function BuyDirect() {
   const strikesIn = useInView(strikeRef, { once: true, margin: "-40px" });
 
   return (
-    <section className="relative overflow-hidden bg-ink-2 py-24 md:py-36">
+    <section className="relative overflow-hidden bg-ink-2 py-16 md:py-36">
       <div className="glow-br relative mx-auto max-w-7xl px-5 md:px-8">
         <Reveal>
           <p className="flex items-center gap-2.5">

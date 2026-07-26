@@ -60,7 +60,7 @@ export default function HeroReveal() {
       const p = clamp(-r.top / (r.height - vh));
       const zoom = zoomRef.current;
       if (zoom) {
-        const s = 1 + p * (window.innerWidth < 768 ? 0.55 : 1.05);
+        const s = 1 + p * (window.innerWidth < 768 ? 0.18 : 0.32);
         zoom.style.transform = `scale(${s}) translateY(${p * 5}%)`;
       }
       if (wordsRef.current) {

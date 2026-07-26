@@ -65,15 +65,15 @@ export const properties: Property[] = [
     region: "West Palm Beach",
     status: "Completed",
     images: 9,
-    blurb: "A completed rebuild — filmed inside and above.",
+    blurb: "A completed rebuild — walked inside and above.",
     body: [
       "A finished statement of the practice: interiors reorganized for circulation and light, structure renewed end to end, and a facade the street is better for.",
-      "The film below walks the completed residence — no renderings, no staging tricks. This is the delivered home.",
+      "The walkthrough below moves through the completed residence — no renderings, no staging tricks. This is the delivered home.",
     ],
     video: {
       src: "/videos/film-317.mp4",
       poster: "/videos/film-317-poster.webp",
-      label: "The film — inside 317 Greymon Dr",
+      label: "Walkthrough — 317 Greymon Dr",
     },
   },
   {

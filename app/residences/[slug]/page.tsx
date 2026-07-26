@@ -146,7 +146,7 @@ export default async function PropertyPage({
         </div>
       </section>
 
-      {/* the film, when there is one */}
+      {/* the walkthrough, when there is one */}
       {p.video && (
         <section className="relative pb-16 md:pb-24">
           <div className="mx-auto max-w-7xl px-5 md:px-8">

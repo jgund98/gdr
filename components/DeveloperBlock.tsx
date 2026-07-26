@@ -6,7 +6,7 @@ import { site } from "@/lib/site";
 
 export default function DeveloperBlock() {
   return (
-    <section className="relative overflow-hidden bg-ink-2 py-24 md:py-32">
+    <section className="relative overflow-hidden bg-ink-2 py-16 md:py-32">
       <div className="glow-tl relative mx-auto max-w-7xl px-5 md:px-8">
         <div className="grid items-center gap-14 lg:grid-cols-12 lg:gap-10">
           <Reveal className="lg:col-span-5">

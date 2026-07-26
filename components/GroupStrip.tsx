@@ -14,13 +14,13 @@ export default function GroupStrip() {
           <p className="label text-faint">A {site.parent} company — Est. {site.founded}</p>
         </Reveal>
         <Reveal delay={0.08}>
-          <div className="mt-8 flex flex-wrap items-center gap-x-14 gap-y-8">
+          <div className="mt-8 flex items-center gap-x-6 sm:gap-x-14">
             <Image
               src="/brand/gdr-lockup.png"
               alt="GDR Development"
               width={1264}
               height={214}
-              className="h-9 w-auto md:h-10"
+              className="h-6 w-auto sm:h-9 md:h-10"
             />
             <a href={site.gusUrl} target="_blank" rel="noopener noreferrer" className="opacity-80 transition-opacity hover:opacity-100">
               <Image
@@ -28,7 +28,7 @@ export default function GroupStrip() {
                 alt="GUSRENNY.COM"
                 width={500}
                 height={408}
-                className="h-12 w-auto md:h-14"
+                className="h-9 w-auto sm:h-12 md:h-14"
               />
             </a>
             <a href={site.rennyRealtyUrl} target="_blank" rel="noopener noreferrer" className="opacity-80 transition-opacity hover:opacity-100">
@@ -37,7 +37,7 @@ export default function GroupStrip() {
                 alt="Renny Realty"
                 width={1200}
                 height={1200}
-                className="h-14 w-auto md:h-16"
+                className="h-10 w-auto sm:h-14 md:h-16"
               />
             </a>
           </div>

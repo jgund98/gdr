@@ -213,6 +213,72 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
                 <text x="222" y="650" fontSize="11" fill="rgba(11,14,9,0.4)">GREYMON DR</text>
               </g>
 
+              {/* the district's real side streets, named faint */}
+              <g fill="rgba(11,14,9,0.32)" fontSize="9" letterSpacing="0.16em" fontFamily="var(--font-instrument-sans)">
+                <text x="322" y="258">DYER RD</text>
+                <text x="322" y="296">PERSHING WAY</text>
+                <text x="500" y="258">GRANADA RD</text>
+                <text x="500" y="296">VALENCIA RD</text>
+                <text x="322" y="378">MONCEAUX RD</text>
+                <text x="500" y="378">NOTTINGHAM BLVD</text>
+                <text x="206" y="688">PILGRIM RD</text>
+              </g>
+              <path d="M 108 84 C 112 130, 106 170, 110 205" stroke="rgba(11,14,9,0.14)" strokeWidth="1.2" fill="none" />
+
+              {/* sheet margin ticks — a working drawing, not a diagram */}
+              <g stroke="rgba(11,14,9,0.25)" strokeWidth="1">
+                <path d="M 12 12 H 888 M 12 828 H 888 M 12 12 V 828 M 888 12 V 828" fill="none" opacity="0.6" />
+                <path d="M 100 12 v 7 M 200 12 v 7 M 300 12 v 7 M 400 12 v 7 M 500 12 v 7 M 600 12 v 7 M 700 12 v 7 M 800 12 v 7" />
+                <path d="M 100 828 v -7 M 200 828 v -7 M 300 828 v -7 M 400 828 v -7 M 500 828 v -7 M 600 828 v -7 M 700 828 v -7 M 800 828 v -7" />
+                <path d="M 12 100 h 7 M 12 200 h 7 M 12 300 h 7 M 12 400 h 7 M 12 500 h 7 M 12 600 h 7 M 12 700 h 7" />
+                <path d="M 888 100 h -7 M 888 200 h -7 M 888 300 h -7 M 888 400 h -7 M 888 600 h -7 M 888 700 h -7" />
+              </g>
+
+              {/* seawall docks + hulls — the Intracoastal working */}
+              <g stroke="rgba(11,14,9,0.35)" strokeWidth="1.5" fill="none">
+                <path d="M 688 130 h 16 m -16 44 h 12 m -12 210 h 16 m -14 260 h 13" />
+                <path d="M 692 176 h 10 m -6 -6 v 12" opacity="0.7" />
+              </g>
+              <g fill="rgba(11,14,9,0.3)">
+                <ellipse cx="722" cy="150" rx="7" ry="2.4" />
+                <ellipse cx="748" cy="300" rx="6" ry="2.2" transform="rotate(14 748 300)" />
+                <ellipse cx="726" cy="590" rx="7" ry="2.4" transform="rotate(-10 726 590)" />
+                <ellipse cx="752" cy="700" rx="5" ry="2" />
+              </g>
+              {/* the current — alive, drifting south */}
+              <path
+                d="M 736 6 C 726 140, 744 300, 732 460 C 726 560, 738 650, 734 726"
+                stroke="rgba(71,118,31,0.3)"
+                strokeWidth="1.5"
+                strokeDasharray="3 10"
+                fill="none"
+                className="dash-flow"
+              />
+
+              {/* palms along the water — hand-set, rooted */}
+              <g stroke="rgba(11,14,9,0.4)" strokeWidth="1.3" fill="none" strokeLinecap="round">
+                {[
+                  [668, 118], [676, 250], [664, 388], [672, 606], [668, 742],
+                  [806, 120], [800, 360], [808, 560], [802, 758],
+                ].map(([px, py], idx) => (
+                  <g key={idx} transform={`translate(${px} ${py})`}>
+                    <path d="M 0 0 v 9" />
+                    <path d="M 0 0 c -5 -4 -9 -4 -12 -2 M 0 0 c -3 -6 -7 -8 -11 -8 M 0 0 c 0 -7 3 -10 7 -11 M 0 0 c 5 -5 9 -5 12 -3 M 0 0 c 3 -4 8 -5 11 -3" />
+                  </g>
+                ))}
+              </g>
+
+              {/* the bridge, pointed home */}
+              <text x="700" y="514" fill="rgba(11,14,9,0.45)" fontSize="9" letterSpacing="0.16em" fontFamily="var(--font-instrument-sans)">
+                TO PALM BEACH →
+              </text>
+
+              {/* the green at Prospect Park's heart */}
+              <g transform="translate(475 415)">
+                <circle r="7" fill="none" stroke="rgba(71,118,31,0.5)" strokeWidth="1.2" />
+                <circle r="2.4" fill="rgba(71,118,31,0.45)" />
+              </g>
+
               {/* the water — the sheet's margin, where the note gets pinned */}
               <path
                 d="M 690 0 C 676 140, 700 320, 686 520 C 676 680, 694 760, 688 840 L 780 840 L 780 0 Z"
@@ -309,39 +375,6 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
         {/* the note, in flow, for phones */}
         <Reveal className="mt-8 border border-ink/15 bg-paper p-6 lg:hidden">{panel}</Reveal>
 
-        {/* the collection, one uniform strip */}
-        <Reveal delay={0.08} className="mt-8">
-          <div className="flex flex-wrap gap-2.5">
-            {allSlugs.map((slug) => {
-              const item = bySlug(slug);
-              if (!item) return null;
-              const isActive = active === slug && !zone;
-              return (
-                <Link
-                  key={slug}
-                  href={`/residences/${slug}`}
-                  onMouseEnter={() => pick(slug)}
-                  onFocus={() => pick(slug)}
-                  className={cn(
-                    "flex items-baseline gap-2.5 whitespace-nowrap border px-4 py-2.5 text-sm font-semibold transition-colors chamfer-sm",
-                    isActive
-                      ? "border-moss bg-moss text-paper"
-                      : "border-ink/20 bg-paper text-ink/75 hover:border-moss hover:text-moss"
-                  )}
-                >
-                  <span
-                    className={cn("h-1.5 w-1.5 shrink-0 rotate-45", isActive ? "bg-paper" : "bg-moss/60")}
-                    aria-hidden
-                  />
-                  {item.address}
-                  <span className={cn("label", isActive ? "text-paper/80" : "text-ink/40")}>
-                    {item.status}
-                  </span>
-                </Link>
-              );
-            })}
-          </div>
-        </Reveal>
       </div>
     </section>
   );

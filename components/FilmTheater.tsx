@@ -52,11 +52,11 @@ export default function FilmTheater({
           >
             <span className="absolute inset-0 bg-ink/35 transition-colors duration-300 group-hover:bg-ink/20" aria-hidden />
             <motion.span
-              className="relative flex h-20 w-20 items-center justify-center bg-green text-ink chamfer-sm md:h-24 md:w-24"
-              whileHover={reduced ? undefined : { scale: 1.06 }}
+              className="relative flex h-12 w-12 items-center justify-center bg-green/95 text-ink chamfer-sm md:h-14 md:w-14"
+              whileHover={reduced ? undefined : { scale: 1.08 }}
               transition={{ duration: 0.3 }}
             >
-              <svg width="26" height="30" viewBox="0 0 26 30" fill="currentColor" aria-hidden>
+              <svg width="16" height="18" viewBox="0 0 26 30" fill="currentColor" aria-hidden>
                 <path d="M0 0v30l26-15L0 0Z" />
               </svg>
             </motion.span>

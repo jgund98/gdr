@@ -87,12 +87,12 @@ export default function PracticePage() {
       </section>
 
       {/* the story */}
-      <section className="relative border-t border-line bg-ink-2 py-20 md:py-28">
+      <section className="relative border-t border-line bg-ink-2 py-14 md:py-28">
         <div className="mx-auto grid max-w-7xl gap-12 px-5 md:px-8 lg:grid-cols-12">
           <Reveal className="lg:col-span-4">
             <p className="tag-index">The lineage</p>
             <p className="display mt-4 text-3xl sm:text-4xl">
-              CENTURY HOTEL TO <em className="text-green">el cid.</em>
+              CENTURY HOTEL<br />TO <em className="text-green">el cid.</em>
             </p>
             <div className="plate mt-10">
               <div className="relative aspect-[4/3] overflow-hidden">
@@ -191,7 +191,7 @@ export default function PracticePage() {
       </section>
 
       {/* principles */}
-      <section className="relative py-20 md:py-28">
+      <section className="relative py-14 md:py-28">
         <div className="mx-auto max-w-7xl px-5 md:px-8">
           <SectionHead
             index="How We Work"
@@ -224,7 +224,7 @@ export default function PracticePage() {
       <Partners index="04" />
 
       {/* closing CTA */}
-      <section className="relative overflow-hidden py-20 md:py-28">
+      <section className="relative overflow-hidden py-14 md:py-28">
         <div className="glow-br relative mx-auto max-w-7xl px-5 text-center md:px-8">
           <Reveal>
             <p className="tag-index">Next</p>
