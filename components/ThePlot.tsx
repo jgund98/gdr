@@ -150,7 +150,8 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
         {/* the sheet — full width, note pinned on the water band */}
         <Reveal className={compact ? "" : "mt-14"}>
           <div className="relative border border-ink/15 bg-paper shadow-[0_30px_80px_rgba(11,14,9,0.12)]">
-            <svg viewBox="0 0 900 840" className="block w-full lg:max-h-[78vh]" role="img" aria-label="Diagrammatic survey map of West Palm Beach with GDR residences pinned">
+            <div className="overflow-x-auto">
+            <svg viewBox="0 0 900 840" className="block h-auto w-full min-w-[760px] sm:min-w-0 lg:max-h-[78vh]" role="img" aria-label="Diagrammatic survey map of West Palm Beach with GDR residences pinned">
               <defs>
                 <pattern id="water" width="10" height="10" patternUnits="userSpaceOnUse">
                   <path d="M 0 5 H 10" stroke="rgba(11,14,9,0.16)" strokeWidth="1" />
@@ -317,13 +318,15 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
                     onMouseEnter={() => pick(pin.slug)}
                     onClick={() => pick(pin.slug)}
                   >
+                    <g className="plot-pin">
                     {isActive && (
                       <rect x="-15" y="-15" width="30" height="30" transform="rotate(45)" fill="none" stroke="#47761f" strokeWidth="1.5" opacity="0.6">
                         <animate attributeName="opacity" values="0.7;0.15;0.7" dur="2s" repeatCount="indefinite" />
                       </rect>
                     )}
                     <rect x="-8" y="-8" width="16" height="16" transform="rotate(45)" fill={isActive ? "#47761f" : "#89bf58"} stroke="#f3f5ed" strokeWidth="2" />
-                    <circle r="25" fill="transparent" />
+                    <circle r="32" fill="transparent" />
+                    </g>
                   </g>
                 );
               })}
@@ -341,6 +344,7 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
                 </g>
               </g>
             </svg>
+            </div>
 
             {/* Los Angeles inset */}
             <div className="absolute bottom-4 left-4 hidden w-52 border border-ink/20 bg-paper/95 p-4 backdrop-blur-sm sm:block">
@@ -371,6 +375,8 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
             </div>
           </div>
         </Reveal>
+
+        <p className="label mt-3 text-ink/40 sm:hidden">Swipe the sheet — tap a district or a pin</p>
 
         {/* the note, in flow, for phones */}
         <Reveal className="mt-8 border border-ink/15 bg-paper p-6 lg:hidden">{panel}</Reveal>

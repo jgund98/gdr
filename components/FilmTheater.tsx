@@ -227,9 +227,27 @@ export default function FilmTheater({
                 animate={{ opacity: 0 }}
                 transition={{ delay: 0.5, duration: 0.3 }}
               />
+              {/* the ident — the mark stamps as the sheet parts */}
+              {!reduced && (
+                <motion.span
+                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                  initial={{ opacity: 0, scale: 0.55 }}
+                  animate={{ opacity: [0, 1, 1, 0], scale: [0.55, 1, 1.04, 1.1] }}
+                  transition={{ duration: 1.0, times: [0, 0.3, 0.75, 1], ease: "easeOut" }}
+                >
+                  <Mark className="h-14 w-auto text-green drop-shadow-[0_0_24px_rgba(137,191,88,0.8)] md:h-20" />
+                </motion.span>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* the bug — quiet corner mark while the reel runs */}
+        {started && (
+          <span className="pointer-events-none absolute right-4 top-4 z-20 opacity-45" aria-hidden>
+            <Mark className="h-5 w-auto text-green md:h-6" />
+          </span>
+        )}
 
         {/* measured controls */}
         {started && (

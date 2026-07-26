@@ -250,3 +250,10 @@ body {
     transform: translate(20px, 20px);
   }
 }
+
+/* the survey pins grow to thumb size on phones */
+@media (max-width: 639px) {
+  .plot-pin {
+    transform: scale(1.5);
+  }
+}
