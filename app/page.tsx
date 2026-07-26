@@ -8,6 +8,7 @@ import Standard from "@/components/Standard";
 import QuoteTheater from "@/components/QuoteTheater";
 import DeveloperBlock from "@/components/DeveloperBlock";
 import GroupStrip from "@/components/GroupStrip";
+import Monument from "@/components/Monument";
 import Reveal from "@/components/Reveal";
 import SectionHead from "@/components/SectionHead";
 
@@ -48,6 +49,7 @@ export default function Home() {
       <QuoteTheater />
       <DeveloperBlock />
       <GroupStrip />
+      <Monument />
     </>
   );
 }

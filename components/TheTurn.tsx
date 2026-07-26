@@ -34,12 +34,12 @@ export default function TheTurn() {
         <SectionHead
           index="03"
           tag="The Turn"
-          headSize="text-3xl sm:text-4xl lg:text-[3rem] xl:text-[3.4rem] 2xl:text-[3.8rem]"
+          headSize="text-3xl sm:text-4xl md:text-[clamp(2rem,3.8vw,3.6rem)]"
           lines={[
-            <span key="l1">
+            <span key="l1" className="md:whitespace-nowrap">
               THE HOUSE <em className="text-green">nobody</em> WANTS.
             </span>,
-            <span key="l2">
+            <span key="l2" className="md:whitespace-nowrap">
               THE STREET <em className="text-green">everybody</em> DOES.
             </span>,
           ]}

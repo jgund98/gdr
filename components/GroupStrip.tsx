@@ -14,14 +14,7 @@ export default function GroupStrip() {
           <p className="label text-faint">A {site.parent} company — Est. {site.founded}</p>
         </Reveal>
         <Reveal delay={0.08}>
-          <div className="mt-8 flex items-center gap-x-6 sm:gap-x-14">
-            <Image
-              src="/brand/gdr-lockup.png"
-              alt="GDR Development"
-              width={1264}
-              height={214}
-              className="h-6 w-auto sm:h-9 md:h-10"
-            />
+          <div className="mt-8 flex items-center gap-x-8 sm:gap-x-14">
             <a href={site.gusUrl} target="_blank" rel="noopener noreferrer" className="opacity-80 transition-opacity hover:opacity-100">
               <Image
                 src="/brand/gr-logo-full.png"
