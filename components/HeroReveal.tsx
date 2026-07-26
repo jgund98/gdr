@@ -104,8 +104,8 @@ export default function HeroReveal() {
           <video
             ref={videoRef}
             className="absolute inset-0 h-full w-full object-cover"
-            src="/videos/estates-vista-v3.mp4"
-            poster="/videos/estates-vista-poster-v3.webp"
+            src="/videos/wpb-neighborhood-v4.mp4"
+            poster="/videos/wpb-neighborhood-poster-v4.webp"
             autoPlay
             muted
             loop
