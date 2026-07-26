@@ -6,7 +6,6 @@ import { motion, useReducedMotion } from "motion/react";
 import Btn from "@/components/Btn";
 import RevealLines from "@/components/RevealLines";
 import Ticker from "@/components/Ticker";
-import { MARK_PATH, MARK_W, MARK_H } from "@/lib/mark";
 
 /**
  * The opening move, in two acts.
@@ -32,7 +31,6 @@ export default function HeroReveal() {
   const fadeRef = useRef<HTMLDivElement | null>(null);
   const svgRef = useRef<SVGSVGElement | null>(null);
   const cueRef = useRef<HTMLDivElement | null>(null);
-  const markRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     videoRef.current?.play().catch(() => {});
@@ -63,13 +61,6 @@ export default function HeroReveal() {
       if (r.bottom < -8) return;
       const vh = window.innerHeight;
       const p = clamp(-r.top / (r.height - vh));
-      // the mark stands on the claimed block: assembles, rises, breathes
-      if (markRef.current) {
-        const rise = clamp((p - 0.5) / 0.3);
-        const sway = Math.sin(t / 1900) * 7;
-        markRef.current.style.opacity = String(rise * clamp((1 - p) * 8));
-        markRef.current.style.transform = `translateX(-50%) translateY(${(1 - rise) * 46}px) rotateX(12deg) rotateY(${-14 + sway}deg) scale(${0.82 + rise * 0.18})`;
-      }
       if (p === lastP && p >= 1) return;
       lastP = p;
       const zoom = zoomRef.current;
@@ -113,8 +104,8 @@ export default function HeroReveal() {
           <video
             ref={videoRef}
             className="absolute inset-0 h-full w-full object-cover"
-            src="/videos/estates-aerial-v2.mp4"
-            poster="/videos/estates-aerial-poster-v2.webp"
+            src="/videos/estates-vista-v3.mp4"
+            poster="/videos/estates-vista-poster-v3.webp"
             autoPlay
             muted
             loop
@@ -173,46 +164,6 @@ export default function HeroReveal() {
               </text>
             </g>
           </svg>
-        )}
-
-        {/* the mark takes the block — the descent's finale */}
-        {!reduced && (
-          <div className="pointer-events-none absolute inset-0 z-[15] [perspective:1000px]" aria-hidden>
-            <div
-              ref={markRef}
-              className="absolute bottom-[24%] left-1/2 w-[120px] opacity-0 will-change-transform [transform-style:preserve-3d] md:w-[170px]"
-            >
-              {Array.from({ length: 9 }, (_, i) => {
-                const front = i === 8;
-                const depth = i / 8;
-                return (
-                  <svg
-                    key={i}
-                    viewBox={`0 0 ${MARK_W} ${MARK_H}`}
-                    className="absolute inset-0 h-full w-full"
-                    style={{
-                      transform: `translateZ(${i * 2.6}px)`,
-                      ...(front
-                        ? { filter: "drop-shadow(0 0 22px rgba(137,191,88,0.55))" }
-                        : {}),
-                    }}
-                  >
-                    <path
-                      d={MARK_PATH}
-                      fill={
-                        front
-                          ? "#89bf58"
-                          : `rgba(${30 + depth * 60}, ${52 + depth * 92}, ${14 + depth * 40}, 0.95)`
-                      }
-                      fillRule="evenodd"
-                    />
-                  </svg>
-                );
-              })}
-              {/* the R needs height to stand in */}
-              <div className="pb-[85%]" />
-            </div>
-          </div>
         )}
 
         {/* the drafting sheet — unmounts once it has parted */}
