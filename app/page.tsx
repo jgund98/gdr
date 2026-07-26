@@ -5,10 +5,8 @@ import TheTurn from "@/components/TheTurn";
 import TheStreet from "@/components/TheStreet";
 import FilmTheater from "@/components/FilmTheater";
 import Standard from "@/components/Standard";
-import BuyDirect from "@/components/BuyDirect";
 import QuoteTheater from "@/components/QuoteTheater";
 import DeveloperBlock from "@/components/DeveloperBlock";
-import Partners from "@/components/Partners";
 import GroupStrip from "@/components/GroupStrip";
 import Reveal from "@/components/Reveal";
 import SectionHead from "@/components/SectionHead";
@@ -47,10 +45,8 @@ export default function Home() {
       </section>
 
       <Standard />
-      <BuyDirect />
       <QuoteTheater />
       <DeveloperBlock />
-      <Partners />
       <GroupStrip />
     </>
   );
