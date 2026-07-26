@@ -30,7 +30,7 @@ export default function DeveloperBlock() {
 
           <div className="lg:col-span-7 lg:pl-6">
             <SectionHead
-              index="08"
+              index="07"
               tag="The Developer"
               lines={[
                 "THE DEVELOPER",
@@ -44,7 +44,17 @@ export default function DeveloperBlock() {
                   restoration of Miami&rsquo;s historic Century Hotel to some of
                   the most coveted streets in West Palm Beach. Gus walks every
                   site, signs every plan, and builds each home as if his own
-                  family would live&nbsp;in&nbsp;it.
+                  family would live&nbsp;in&nbsp;it. And when a residence sells,
+                  it sells direct — through a strategic partnership with{" "}
+                  <a
+                    href={site.rennyRealtyUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="border-b border-green/50 text-paper transition-colors hover:border-green"
+                  >
+                    Renny&nbsp;Realty
+                  </a>
+                  , with answers from the person who built&nbsp;it.
                 </>
               }
             />
