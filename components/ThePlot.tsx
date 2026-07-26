@@ -46,7 +46,9 @@ const zones = [
 ] as const;
 
 /* The portrait projection. Same city, squeezed to a phone: the west/east
-   split across S Olive Ave survives, and so does the north→south order. */
+   split across S Olive Ave survives, and so does the north→south order.
+   Kept short on purpose — the drawing and the record it opens have to sit
+   on one screen together, or a tap looks like it did nothing. */
 const zonesM: {
   key: string;
   x: number;
@@ -58,30 +60,30 @@ const zonesM: {
   sub?: string;
   subY?: number;
 }[] = [
-  { key: "flamingo", x: 46, y: 58, w: 146, h: 84, lines: ["FLAMINGO", "PARK"], ly: [86, 104] },
-  { key: "elcid", x: 210, y: 176, w: 110, h: 84, lines: ["EL CID"], ly: [224] },
-  { key: "prospect", x: 210, y: 272, w: 110, h: 74, lines: ["PROSPECT", "PARK"], ly: [303, 321] },
-  { key: "southland", x: 210, y: 358, w: 110, h: 74, lines: ["SOUTHLAND", "PARK"], ly: [389, 407] },
+  { key: "flamingo", x: 46, y: 40, w: 146, h: 62, lines: ["FLAMINGO", "PARK"], ly: [64, 80] },
+  { key: "elcid", x: 210, y: 128, w: 110, h: 58, lines: ["EL CID"], ly: [162] },
+  { key: "prospect", x: 210, y: 196, w: 110, h: 52, lines: ["PROSPECT", "PARK"], ly: [216, 231] },
+  { key: "southland", x: 210, y: 256, w: 110, h: 52, lines: ["SOUTHLAND", "PARK"], ly: [276, 291] },
   {
     key: "soso",
     x: 46,
-    y: 474,
+    y: 340,
     w: 274,
-    h: 192,
+    h: 130,
     lines: ["SOSO"],
-    ly: [512],
+    ly: [368],
     sub: "SOUTH OF SOUTHERN",
-    subY: 532,
+    subY: 383,
   },
-] as const;
+];
 
 const pinsM = [
-  { slug: "kanuga-707", x: 140, y: 130 },
-  { slug: "washington-3609", x: 288, y: 508 },
-  { slug: "greymon-227", x: 262, y: 596 },
-  { slug: "greymon-309", x: 214, y: 596 },
-  { slug: "greymon-317", x: 166, y: 596 },
-  { slug: "greymon-335", x: 118, y: 596 },
+  { slug: "kanuga-707", x: 140, y: 92 },
+  { slug: "washington-3609", x: 288, y: 358 },
+  { slug: "greymon-227", x: 262, y: 420 },
+  { slug: "greymon-309", x: 214, y: 420 },
+  { slug: "greymon-317", x: 166, y: 420 },
+  { slug: "greymon-335", x: 118, y: 420 },
 ] as const;
 
 export default function ThePlot({ compact = false }: { compact?: boolean }) {
@@ -91,31 +93,37 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
   const d = zone ? districts.find((x) => x.key === zone) : null;
   const allSlugs = [...pins, ...laPins].map((x) => x.slug);
 
-  /* Phones: the note can't live under a 760px drawing — a tap there would
-     read as nothing happening. It pins to the bottom of the screen instead,
-     for as long as the sheet is what you're looking at. */
   const mapRef = useRef<HTMLDivElement>(null);
-  const [mapInView, setMapInView] = useState(false);
-  const [noteOpen, setNoteOpen] = useState(true);
+
+  /* A drawing this size lives under the thumb, so it catches strokes meant
+     for the page — including the tap that kills momentum scrolling. Only a
+     still finger, well clear of any scrolling, counts as a choice. */
+  const tap = useRef({ x: 0, y: 0, ok: true });
+  const lastScroll = useRef(0);
 
   useEffect(() => {
-    const el = mapRef.current;
-    if (!el) return;
-    const io = new IntersectionObserver(([e]) => setMapInView(e.isIntersecting), {
-      threshold: 0.12,
-    });
-    io.observe(el);
-    return () => io.disconnect();
+    const onScroll = () => (lastScroll.current = Date.now());
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  const onPointerDown = (e: React.PointerEvent) => {
+    tap.current = { x: e.clientX, y: e.clientY, ok: true };
+  };
+  const onPointerUp = (e: React.PointerEvent) => {
+    const moved = Math.hypot(e.clientX - tap.current.x, e.clientY - tap.current.y);
+    tap.current.ok = moved < 12;
+  };
+  const deliberate = () => tap.current.ok && Date.now() - lastScroll.current > 320;
+
   const pick = (slug: string) => {
+    if (!deliberate()) return;
     setZone(null);
     setActive(slug);
-    setNoteOpen(true);
   };
   const pickZone = (key: string) => {
+    if (!deliberate()) return;
     setZone(key);
-    setNoteOpen(true);
   };
 
   /* One panel, two homes: pinned on the sheet (desktop), under it (mobile). */
@@ -210,7 +218,7 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
         )}
 
         {/* the sheet — full width, note pinned on the water band */}
-        <p className="label mb-3 text-ink/40 lg:hidden">Tap a district or a pin</p>
+        <p className="label mb-3 text-ink/40 lg:hidden">Tap a district or a pin — the record is just below</p>
 
         <Reveal className={compact ? "" : "mt-14 lg:mt-14"}>
           <div
@@ -222,10 +230,12 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
                 El Cid / Prospect / Southland column still runs down the
                 water, and SoSo still spans wide below Southern Blvd. */}
             <svg
-              viewBox="0 0 420 820"
-              className="block h-auto w-full lg:hidden"
+              viewBox="0 0 420 560"
+              className="block h-auto w-full touch-pan-y lg:hidden"
               role="img"
               aria-label="Survey map of West Palm Beach districts with GDR residences"
+              onPointerDown={onPointerDown}
+              onPointerUp={onPointerUp}
             >
               <defs>
                 <pattern id="waterM" width="9" height="9" patternUnits="userSpaceOnUse">
@@ -235,45 +245,45 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
 
               {/* sheet margin — a working drawing, not a diagram */}
               <g stroke="rgba(11,14,9,0.25)" strokeWidth="1" fill="none">
-                <path d="M 10 10 H 410 M 10 810 H 410 M 10 10 V 810 M 410 10 V 810" opacity="0.55" />
-                <path d="M 110 10 v 6 M 210 10 v 6 M 310 10 v 6" />
-                <path d="M 110 810 v -6 M 210 810 v -6 M 310 810 v -6" />
-                <path d="M 10 210 h 6 M 10 410 h 6 M 10 610 h 6" />
+                <path d="M 8 8 H 412 M 8 552 H 412 M 8 8 V 552 M 412 8 V 552" opacity="0.55" />
+                <path d="M 110 8 v 6 M 210 8 v 6 M 310 8 v 6" />
+                <path d="M 110 552 v -6 M 210 552 v -6 M 310 552 v -6" />
+                <path d="M 8 150 h 6 M 8 300 h 6 M 8 450 h 6" />
               </g>
 
               {/* the water, down the east edge */}
-              <rect x="336" y="18" width="44" height="784" fill="url(#waterM)" stroke="rgba(11,14,9,0.28)" strokeWidth="1.2" />
-              <rect x="380" y="18" width="26" height="784" fill="#f3f5ed" stroke="rgba(11,14,9,0.32)" strokeWidth="1.2" />
-              <text x="352" y="236" fill="rgba(11,14,9,0.45)" fontSize="10" letterSpacing="0.26em" transform="rotate(90 352 236)" fontFamily="var(--font-instrument-sans)">
+              <rect x="336" y="16" width="44" height="528" fill="url(#waterM)" stroke="rgba(11,14,9,0.28)" strokeWidth="1.2" />
+              <rect x="380" y="16" width="26" height="528" fill="#f3f5ed" stroke="rgba(11,14,9,0.32)" strokeWidth="1.2" />
+              <text x="352" y="150" fill="rgba(11,14,9,0.45)" fontSize="9" letterSpacing="0.24em" transform="rotate(90 352 150)" fontFamily="var(--font-instrument-sans)">
                 INTRACOASTAL
               </text>
-              <text x="396" y="556" fill="rgba(11,14,9,0.55)" fontSize="10" letterSpacing="0.26em" transform="rotate(90 396 556)" fontFamily="var(--font-instrument-sans)">
+              <text x="396" y="376" fill="rgba(11,14,9,0.55)" fontSize="9" letterSpacing="0.24em" transform="rotate(90 396 376)" fontFamily="var(--font-instrument-sans)">
                 PALM BEACH
               </text>
               {/* the bridge home */}
-              <path d="M 336 462 H 380" stroke="rgba(11,14,9,0.35)" strokeWidth="2.5" />
+              <path d="M 336 330 H 380" stroke="rgba(11,14,9,0.35)" strokeWidth="2.2" />
 
               {/* arteries — Dixie and Olive west, Flagler on the water */}
-              <g stroke="rgba(11,14,9,0.24)" strokeWidth="1.6" fill="none">
-                <path d="M 36 24 V 796" />
-                <path d="M 200 24 V 796" />
-                <path d="M 326 24 V 796" strokeWidth="1.1" />
-                <path d="M 20 158 H 336" />
-                <path d="M 20 462 H 336" strokeWidth="2.4" />
+              <g stroke="rgba(11,14,9,0.24)" strokeWidth="1.5" fill="none">
+                <path d="M 36 16 V 544" />
+                <path d="M 200 16 V 544" />
+                <path d="M 326 16 V 544" strokeWidth="1.1" />
+                <path d="M 16 112 H 336" />
+                <path d="M 16 330 H 336" strokeWidth="2.2" />
               </g>
-              <g fill="rgba(11,14,9,0.45)" fontSize="10" letterSpacing="0.18em" fontFamily="var(--font-instrument-sans)">
-                <text x="26" y="152">BELVEDERE RD</text>
-                <text x="26" y="456">SOUTHERN BLVD</text>
-                <text x="30" y="196" transform="rotate(90 30 196)">S DIXIE HWY</text>
-                <text x="194" y="268" transform="rotate(90 194 268)">S OLIVE AVE</text>
-                <text x="320" y="86" transform="rotate(90 320 86)">S FLAGLER DR</text>
+              <g fill="rgba(11,14,9,0.45)" fontSize="9" letterSpacing="0.16em" fontFamily="var(--font-instrument-sans)">
+                <text x="22" y="106">BELVEDERE RD</text>
+                <text x="22" y="324">SOUTHERN BLVD</text>
+                <text x="30" y="150" transform="rotate(90 30 150)">S DIXIE HWY</text>
+                <text x="194" y="196" transform="rotate(90 194 196)">S OLIVE AVE</text>
+                <text x="320" y="46" transform="rotate(90 320 46)">S FLAGLER DR</text>
               </g>
 
               {/* cross-street texture, so the parcels sit on a real grid */}
               <g stroke="rgba(11,14,9,0.10)" strokeWidth="1" fill="none">
-                <path d="M 46 86 H 192 M 46 118 H 192" />
-                <path d="M 210 202 H 320 M 210 236 H 320 M 210 298 H 320 M 210 386 H 320" />
-                <path d="M 46 524 H 320 M 46 560 H 320 M 46 632 H 320" />
+                <path d="M 46 60 H 192 M 46 82 H 192" />
+                <path d="M 210 146 H 320 M 210 168 H 320 M 210 214 H 320 M 210 274 H 320" />
+                <path d="M 46 358 H 320 M 46 388 H 320 M 46 448 H 320" />
               </g>
 
               {/* the districts, where the city actually puts them */}
@@ -324,8 +334,8 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
               })}
 
               {/* Greymon Dr, running east–west through SoSo */}
-              <path d="M 56 596 H 310" stroke="rgba(11,14,9,0.2)" strokeWidth="1.2" />
-              <text x="58" y="584" fill="rgba(11,14,9,0.42)" fontSize="9" letterSpacing="0.16em" fontFamily="var(--font-instrument-sans)">
+              <path d="M 56 420 H 310" stroke="rgba(11,14,9,0.2)" strokeWidth="1.2" />
+              <text x="58" y="410" fill="rgba(11,14,9,0.42)" fontSize="8" letterSpacing="0.16em" fontFamily="var(--font-instrument-sans)">
                 GREYMON DR
               </text>
 
@@ -351,40 +361,33 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
               })}
 
               {/* north */}
-              <g transform="translate(296 62)">
-                <path d="M 0 14 L 0 -12 M 0 -12 L -5 -1 M 0 -12 L 5 -1" stroke="rgba(11,14,9,0.5)" strokeWidth="1.8" fill="none" />
-                <text x="0" y="30" textAnchor="middle" fill="rgba(11,14,9,0.5)" fontSize="10" letterSpacing="0.2em" fontFamily="var(--font-instrument-sans)">
+              <g transform="translate(296 44)">
+                <path d="M 0 12 L 0 -10 M 0 -10 L -4.5 -1 M 0 -10 L 4.5 -1" stroke="rgba(11,14,9,0.5)" strokeWidth="1.6" fill="none" />
+                <text x="0" y="26" textAnchor="middle" fill="rgba(11,14,9,0.5)" fontSize="9" letterSpacing="0.2em" fontFamily="var(--font-instrument-sans)">
                   N
                 </text>
               </g>
 
               {/* California, as a footnote strip */}
               <g onClick={() => pick("linda-flora-2179")} className="cursor-pointer">
-                <rect x="20" y="690" width="300" height="56" fill="none" stroke="rgba(11,14,9,0.18)" strokeWidth="1" />
-                <text x="32" y="712" fill="rgba(11,14,9,0.45)" fontSize="9" letterSpacing="0.2em" fontFamily="var(--font-instrument-sans)">
+                <rect x="16" y="484" width="304" height="42" fill="none" stroke="rgba(11,14,9,0.18)" strokeWidth="1" />
+                <text x="28" y="502" fill="rgba(11,14,9,0.45)" fontSize="8" letterSpacing="0.18em" fontFamily="var(--font-instrument-sans)">
                   SELECT PROJECTS — CALIFORNIA
                 </text>
-                <text x="32" y="734" fill="rgba(71,118,31,0.9)" fontSize="11" letterSpacing="0.16em" fontWeight="600" fontFamily="var(--font-instrument-sans)">
+                <text x="28" y="519" fill="rgba(71,118,31,0.9)" fontSize="10" letterSpacing="0.14em" fontWeight="600" fontFamily="var(--font-instrument-sans)">
                   BEL AIR
                 </text>
-                <text x="132" y="734" fill="rgba(71,118,31,0.9)" fontSize="11" letterSpacing="0.16em" fontWeight="600" fontFamily="var(--font-instrument-sans)">
+                <text x="122" y="519" fill="rgba(71,118,31,0.9)" fontSize="10" letterSpacing="0.14em" fontWeight="600" fontFamily="var(--font-instrument-sans)">
                   HOLLYWOOD HILLS
                 </text>
-                <rect x="96" y="724" width="11" height="11" transform="rotate(45 101.5 729.5)" fill="#89bf58" stroke="#f3f5ed" strokeWidth="1.6" />
-                <rect x="270" y="724" width="11" height="11" transform="rotate(45 275.5 729.5)" fill="#89bf58" stroke="#f3f5ed" strokeWidth="1.6" />
+                <rect x="88" y="510" width="10" height="10" transform="rotate(45 93 515)" fill="#89bf58" stroke="#f3f5ed" strokeWidth="1.6" />
+                <rect x="252" y="510" width="10" height="10" transform="rotate(45 257 515)" fill="#89bf58" stroke="#f3f5ed" strokeWidth="1.6" />
               </g>
 
-              {/* title block */}
-              <g fontFamily="var(--font-instrument-sans)">
-                <rect x="20" y="756" width="300" height="46" fill="#f3f5ed" stroke="rgba(11,14,9,0.3)" strokeWidth="1.2" />
-                <path d="M 20 780 H 320" stroke="rgba(11,14,9,0.2)" strokeWidth="1" />
-                <text x="32" y="773" fill="rgba(11,14,9,0.65)" fontSize="11" letterSpacing="0.18em" fontWeight="600">
-                  GDR DEVELOPMENT
-                </text>
-                <text x="32" y="795" fill="rgba(11,14,9,0.45)" fontSize="9.5" letterSpacing="0.16em">
-                  SURVEY OF WORK — WPB
-                </text>
-              </g>
+              {/* title line */}
+              <text x="16" y="544" fill="rgba(11,14,9,0.4)" fontSize="8" letterSpacing="0.16em" fontFamily="var(--font-instrument-sans)">
+                GDR DEVELOPMENT · SURVEY OF WORK — WPB
+              </text>
             </svg>
 
             {/* ── desktop: the wide sheet, untouched ── */}
@@ -614,34 +617,11 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
           </div>
         </Reveal>
 
-        {/* the surveyor's note — pinned to the screen (phones), so a tap on
-            the drawing answers where the thumb already is */}
-        <AnimatePresence>
-          {mapInView && noteOpen && (
-            <motion.div
-              className="fixed inset-x-3 bottom-3 z-40 max-h-[46svh] overflow-y-auto overscroll-contain border border-ink/25 bg-paper p-5 shadow-[0_-10px_40px_rgba(11,14,9,0.28)] lg:hidden"
-              initial={{ y: "110%" }}
-              animate={{ y: 0 }}
-              exit={{ y: "110%" }}
-              transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <span
-                className="absolute -top-2 left-1/2 h-4 w-4 -translate-x-1/2 rotate-45 border border-ink/20 bg-green"
-                aria-hidden
-              />
-              <button
-                type="button"
-                onClick={() => setNoteOpen(false)}
-                aria-label="Close the note"
-                className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center text-xl leading-none text-ink/45 transition-colors hover:text-ink"
-              >
-                ×
-              </button>
-              {panel}
-            </motion.div>
-          )}
-        </AnimatePresence>
-
+        {/* the note, in flow and directly under the drawing — the map is
+            drawn short enough that both sit on one screen, so a tap's answer
+            is already visible. Nothing floats, nothing clips, nothing to
+            dismiss. */}
+        <div className="mt-6 border-t-2 border-moss/60 bg-paper pt-6 lg:hidden">{panel}</div>
       </div>
     </section>
   );

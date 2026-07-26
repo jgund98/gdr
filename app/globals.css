@@ -262,8 +262,92 @@ body {
    Prefixed and unprefixed so older WebKit still gets the soft edge rather
    than a hard rectangle (which would read as a pasted-on card). */
 .house-bleed {
-  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 30%);
-  mask-image: linear-gradient(180deg, transparent 0%, #000 30%);
+  /* a short handoff on phones: the less distance two photographs overlap,
+     the less they muddy each other */
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 18%);
+  mask-image: linear-gradient(180deg, transparent 0%, #000 18%);
+}
+
+/* ── the opening drawing, in pure CSS ──────────────────────────────
+   The loader runs during hydration, the most contended moment there is,
+   so not one of its strokes is animated in JavaScript. Paths carry
+   pathLength="1", so a normalised dash offset draws them; delays come in
+   as custom properties. A display:none copy costs nothing — the browser
+   neither paints nor animates it — which is what lets the phone and the
+   desktop framings both sit in the markup. */
+@keyframes plan-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes plan-ink {
+  to {
+    opacity: 1;
+  }
+}
+.plan-line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: plan-draw var(--dur, 0.5s) ease-in-out var(--delay, 0s) forwards;
+}
+.plan-text {
+  opacity: 0;
+  animation: plan-ink var(--dur, 0.3s) ease-out var(--delay, 0s) forwards;
+}
+
+/* ── the section reveal ────────────────────────────────────────────
+   Used three dozen times on the home page. As a JS animation that meant
+   three dozen runtimes and three dozen observers hydrating at once; as a
+   CSS keyframe driven by one shared observer it costs almost nothing and
+   looks exactly the same. */
+@keyframes reveal-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.reveal {
+  opacity: 0;
+  transform: translateY(var(--rv-y, 28px));
+}
+.reveal.is-in {
+  animation: reveal-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) var(--rv-delay, 0s) forwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+  .reveal.is-in {
+    animation: none;
+  }
+}
+
+/* the specimen's slow settle — a compositor transform, off the main thread */
+@keyframes house-settle {
+  from {
+    transform: scale(1.045);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+.house-settle {
+  animation: house-settle 6.4s linear forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plan-line {
+    stroke-dashoffset: 0;
+    animation: none;
+  }
+  .plan-text {
+    opacity: 1;
+    animation: none;
+  }
+  .house-settle {
+    animation: none;
+  }
 }
 @media (min-width: 1024px) {
   .house-bleed {

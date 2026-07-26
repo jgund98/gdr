@@ -16,7 +16,9 @@ import { bySlug } from "@/lib/properties";
  * A second, unmasked copy sits ready underneath: the descent fades it up
  * and the house becomes the entire frame. Opacity and transform only.
  */
-const ORDER = ["greymon-317", "greymon-309", "washington-3609", "kanuga-707"] as const;
+/* the four sharpest exteriors — used at their native resolution, never
+   re-cropped or upscaled, so the descent zoom stays crisp */
+const ORDER = ["greymon-309", "kanuga-707", "washington-3609", "greymon-227"] as const;
 const HOLD = 5200;
 
 export default function HeroHouse({
@@ -44,16 +46,19 @@ export default function HeroHouse({
       {/* the panel — bled to the edges, feathered into the city */}
       <div className="house-bleed pointer-events-none absolute inset-x-0 bottom-0 h-[42%] lg:inset-y-0 lg:left-auto lg:right-0 lg:h-full lg:w-[58%]">
         <AnimatePresence>
+          {/* opacity is React's (AnimatePresence needs it for the exit);
+              the long settle is a CSS keyframe so it never touches the
+              main thread while the visitor is scrolling */}
           <motion.div
             key={slug}
-            className="absolute inset-0"
-            initial={reduced ? false : { opacity: 0, scale: 1.045 }}
-            animate={{ opacity: 1, scale: 1 }}
+            className={reduced ? "absolute inset-0" : "house-settle absolute inset-0"}
+            initial={reduced ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
             exit={{ opacity: 0, transition: { duration: 1.1, ease: "easeInOut" } }}
-            transition={{ opacity: { duration: 1.1 }, scale: { duration: 6.4, ease: "linear" } }}
+            transition={{ duration: 1.1 }}
           >
             <Image
-              src={`/hero/plate-${slug}.webp`}
+              src={`/properties/${slug}/01.webp`}
               alt={`${p.address} — ${p.neighborhood}, ${p.city}`}
               fill
               sizes="(max-width: 1024px) 100vw, 58vw"
@@ -66,7 +71,7 @@ export default function HeroHouse({
             on a slow connection */}
         <div className="pointer-events-none absolute inset-0 opacity-0" aria-hidden>
           <Image
-            src={`/hero/plate-${ORDER[(i + 1) % ORDER.length]}.webp`}
+            src={`/properties/${ORDER[(i + 1) % ORDER.length]}/01.webp`}
             alt=""
             fill
             sizes="(max-width: 1024px) 100vw, 58vw"
@@ -82,7 +87,7 @@ export default function HeroHouse({
         aria-hidden
       >
         <Image
-          src={`/hero/plate-${slug}.webp`}
+          src={`/properties/${slug}/01.webp`}
           alt=""
           fill
           sizes="100vw"

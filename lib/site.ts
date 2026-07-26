@@ -11,8 +11,7 @@ export const site = {
   description:
     "GDR Development — a limited collection of rebuilt historic homes and ground-up residences in West Palm Beach and Los Angeles, developed start to finish by Gus Renny.",
   founded: 1997,
-  /** current live home of the personal brand — flip at gusrenny.com cutover */
-  gusUrl: "https://gus.epicdevsolutions.com",
+  gusUrl: "https://www.gusrenny.com",
   rennyRealtyUrl: "https://rennyrealty.com",
   social: {
     instagram: "https://www.instagram.com/grenny12/",

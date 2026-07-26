@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion, useReducedMotion } from "motion/react";
 import Btn from "@/components/Btn";
 import RevealLines from "@/components/RevealLines";
+import SheetPlan from "@/components/SheetPlan";
 import HeroHouse from "@/components/HeroHouse";
 import Ticker from "@/components/Ticker";
 
@@ -153,15 +154,20 @@ export default function HeroReveal() {
 
   const panel = "absolute inset-x-0 z-30 h-1/2 bg-paper survey-ink";
   const ease = [0.76, 0, 0.24, 1] as const;
+  /** the plan finishes drawing, then the sheet tears */
+  const PART_AT = 1.62;
   const started = reduced || gone;
 
   return (
     <section
       ref={wrapRef}
       aria-label="GDR Development"
-      className={reduced ? "relative h-[100svh] min-h-[520px]" : "relative h-[240svh]"}
+      className={reduced ? "relative h-[100dvh] min-h-[520px]" : "relative h-[240svh]"}
     >
-      <div className="sticky top-0 h-[100svh] min-h-[560px] overflow-hidden">
+      {/* dvh, not svh: when the phone's address bar collapses the visible
+          viewport grows, and an svh-sized frame stops short — leaving a dark
+          band under the house. dvh tracks the live viewport exactly. */}
+      <div className="sticky top-0 h-[100dvh] min-h-[560px] overflow-hidden">
         {/* the city — West Palm Beach from above, running to the Intracoastal */}
         <div ref={zoomRef} className="absolute inset-0 will-change-transform" style={{ transformOrigin: "50% 64%" }}>
           <video
@@ -180,7 +186,7 @@ export default function HeroReveal() {
         <div className="absolute inset-0" aria-hidden>
           <div className="absolute inset-0 bg-gradient-to-b from-ink/48 via-ink/10 to-ink/62" />
           <div className="absolute inset-0 bg-[linear-gradient(101deg,rgba(11,14,9,0.95)_0%,rgba(11,14,9,0.90)_26%,rgba(11,14,9,0.75)_46%,rgba(11,14,9,0.52)_62%,rgba(11,14,9,0.30)_75%,rgba(11,14,9,0.13)_88%,transparent_100%)]" />
-          <div className="survey absolute inset-0 opacity-80 [mask-image:linear-gradient(101deg,#000_0%,#000_44%,transparent_72%)]" />
+          <div className="survey absolute inset-0 opacity-40 [mask-image:linear-gradient(101deg,#000_0%,#000_44%,transparent_72%)] lg:opacity-80" />
           <div className="absolute inset-0 bg-[linear-gradient(101deg,transparent_0%,transparent_77.5%,rgba(137,191,88,0.2)_79.5%,transparent_81.5%)]" />
           <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-ink/75 to-transparent" />
         </div>
@@ -222,13 +228,22 @@ export default function HeroReveal() {
         {!reduced && !gone && (
           <>
             <motion.div
-              className={`${panel} top-0`}
+              className={`${panel} top-0 overflow-hidden`}
               initial={{ y: "0%" }}
-              animate={{ y: ["0%", "-26%", "-26%", "-102%"] }}
-              transition={{ duration: 2.15, times: [0, 0.34, 0.56, 1], ease: [ease, ease, ease] }}
+              animate={{ y: "-102%" }}
+              transition={{ delay: PART_AT, duration: 0.85, ease }}
               onAnimationComplete={() => setGone(true)}
               aria-hidden
             >
+              {/* top half of one full-viewport drawing */}
+              <div className="absolute inset-x-0 top-0 h-[100dvh]">
+                <div className="absolute inset-0 lg:hidden">
+                  <SheetPlan variant="detail" />
+                </div>
+                <div className="absolute inset-0 hidden lg:block">
+                  <SheetPlan variant="wide" />
+                </div>
+              </div>
               <div className="absolute inset-x-0 bottom-0">
                 <div className="mx-auto flex max-w-7xl items-end justify-between px-5 pb-6 md:px-8">
                   <Image
@@ -247,12 +262,22 @@ export default function HeroReveal() {
               <span className="absolute right-5 top-5 h-4 w-4 border-r-2 border-t-2 border-ink/30 md:right-8 md:top-8" />
             </motion.div>
             <motion.div
-              className={`${panel} bottom-0`}
+              className={`${panel} bottom-0 overflow-hidden`}
               initial={{ y: "0%" }}
-              animate={{ y: ["0%", "26%", "26%", "102%"] }}
-              transition={{ duration: 2.15, times: [0, 0.34, 0.56, 1], ease: [ease, ease, ease] }}
+              animate={{ y: "102%" }}
+              transition={{ delay: PART_AT, duration: 0.85, ease }}
               aria-hidden
             >
+              {/* bottom half of the same drawing — the line work meets exactly
+                  at the seam until the sheet tears */}
+              <div className="absolute inset-x-0 bottom-0 h-[100dvh]">
+                <div className="absolute inset-0 lg:hidden">
+                  <SheetPlan variant="detail" />
+                </div>
+                <div className="absolute inset-0 hidden lg:block">
+                  <SheetPlan variant="wide" />
+                </div>
+              </div>
               <div className="absolute inset-x-0 top-0">
                 <div className="h-[2px] w-full bg-green shadow-[0_0_16px_rgba(137,191,88,0.8)]" />
                 <div className="mx-auto flex max-w-7xl items-start justify-between px-5 pt-6 md:px-8">
@@ -265,6 +290,14 @@ export default function HeroReveal() {
             </motion.div>
           </>
         )}
+
+        {/* Phones: put the lower aerial to bed before the house arrives. Two
+            busy photographs blending into each other reads as noise; a house
+            rising out of darkness reads as one picture. */}
+        <div
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,transparent_36%,rgba(11,14,9,0.72)_50%,rgba(11,14,9,0.97)_60%,rgba(11,14,9,0.97)_100%)] lg:hidden"
+          aria-hidden
+        />
 
         {/* the work — bled into the frame behind the type */}
         <HeroHouse start={started} paused={descending} />
@@ -282,7 +315,7 @@ export default function HeroReveal() {
               className="mb-3.5 flex flex-wrap items-center gap-x-3 gap-y-2"
               initial={reduced ? false : { opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: reduced ? 0 : 1.55, duration: 0.6 }}
+              transition={{ delay: reduced ? 0 : 1.95, duration: 0.6 }}
             >
               <span className="label chamfer-sm bg-green px-3 py-1.5 text-ink">
                 Luxury Real Estate Development
@@ -293,7 +326,7 @@ export default function HeroReveal() {
             </motion.p>
             <RevealLines
               as="h1"
-              delay={reduced ? 0 : 1.68}
+              delay={reduced ? 0 : 2.05}
               /* sized so both lines sit unwrapped at every width */
               className="text-[10vw] leading-[0.98] [text-shadow:0_2px_34px_rgba(11,14,9,0.55)] sm:text-[8.6vw] md:text-[7.4vw] lg:text-[3.1rem] xl:text-[3.8rem] 2xl:text-[4.2rem]"
               lines={[
@@ -308,7 +341,7 @@ export default function HeroReveal() {
               className="min-w-0 will-change-transform"
               initial={reduced ? false : { opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: reduced ? 0 : 1.95, duration: 0.6 }}
+              transition={{ delay: reduced ? 0 : 2.3, duration: 0.6 }}
             >
               <p className="mt-4 max-w-md text-base leading-relaxed text-paper/95 [text-shadow:0_2px_20px_rgba(11,14,9,0.9),0_1px_4px_rgba(11,14,9,0.7)] md:mt-5 md:text-lg">
                 Historic homes rebuilt. New ones built to&nbsp;belong.
@@ -334,7 +367,7 @@ export default function HeroReveal() {
             className="absolute bottom-16 left-5 z-10 hidden items-center gap-2 md:flex md:left-8"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 2.6, duration: 0.8 }}
+            transition={{ delay: 2.9, duration: 0.8 }}
           >
             <span className="label text-paper/70">Scroll</span>
             <motion.span

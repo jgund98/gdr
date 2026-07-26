@@ -34,7 +34,8 @@ export default function TheStreet() {
   const paused = useRef(false);
   const onScreen = useRef(true);
   const pos = useRef(0);
-  const boost = useRef(0); // signed px still owed to an arrow press
+  const boost = useRef(0); // signed px still owed to an arrow press or a flick
+  const dragged = useRef(false);
   const reduced = useReducedMotion();
 
   useEffect(() => {
@@ -64,10 +65,78 @@ export default function TheStreet() {
     const pause = () => (paused.current = true);
     const resume = () => (paused.current = false);
     const host = track.parentElement;
+
+    /* Take the wheel: a finger on the drive stops it and moves it directly.
+       The container is touch-action: pan-y, so the browser still owns
+       vertical scrolling — only a deliberate sideways stroke drives, and the
+       section can never trap the page. A flick hands off to the same boost
+       the arrows use, so it glides to a stop instead of snapping. */
+    let sx = 0;
+    let sy = 0;
+    let basePos = 0;
+    let axis: "" | "x" | "y" = "";
+    let lastX = 0;
+    let lastT = 0;
+    let vx = 0;
+
+    const onStart = (e: TouchEvent) => {
+      const t = e.touches[0];
+      if (!t) return;
+      paused.current = true;
+      boost.current = 0;
+      sx = lastX = t.clientX;
+      sy = t.clientY;
+      lastT = e.timeStamp;
+      vx = 0;
+      axis = "";
+      basePos = pos.current;
+      dragged.current = false;
+    };
+
+    const onMove = (e: TouchEvent) => {
+      const t = e.touches[0];
+      if (!t) return;
+      const dx = t.clientX - sx;
+      const dy = t.clientY - sy;
+      if (!axis) {
+        if (Math.abs(dx) < 6 && Math.abs(dy) < 6) return;
+        axis = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
+        // a vertical stroke belongs to the page — let go of it entirely
+        if (axis === "y") paused.current = false;
+      }
+      if (axis !== "x") return;
+      const dt = e.timeStamp - lastT;
+      if (dt > 0) vx = (t.clientX - lastX) / dt; // px per ms
+      lastX = t.clientX;
+      lastT = e.timeStamp;
+      if (Math.abs(dx) > 8) dragged.current = true;
+      pos.current = basePos - dx;
+    };
+
+    const onEnd = () => {
+      if (axis === "x") {
+        const span = host ? host.clientWidth : 420;
+        const fling = Math.max(-span * 1.2, Math.min(span * 1.2, -vx * 140));
+        if (Math.abs(fling) > 8) boost.current += fling;
+      }
+      axis = "";
+      paused.current = false;
+    };
+
+    // a drag that ends over a card must not also open that card
+    const onClickCapture = (e: MouseEvent) => {
+      if (!dragged.current) return;
+      dragged.current = false;
+      e.preventDefault();
+      e.stopPropagation();
+    };
+
     if (host) {
-      host.addEventListener("touchstart", pause, { passive: true });
-      host.addEventListener("touchend", resume, { passive: true });
-      host.addEventListener("touchcancel", resume, { passive: true });
+      host.addEventListener("touchstart", onStart, { passive: true });
+      host.addEventListener("touchmove", onMove, { passive: true });
+      host.addEventListener("touchend", onEnd, { passive: true });
+      host.addEventListener("touchcancel", onEnd, { passive: true });
+      host.addEventListener("click", onClickCapture, true);
       host.addEventListener("mouseenter", pause);
       host.addEventListener("mouseleave", resume);
     }
@@ -75,9 +144,11 @@ export default function TheStreet() {
       cancelAnimationFrame(raf);
       io.disconnect();
       if (host) {
-        host.removeEventListener("touchstart", pause);
-        host.removeEventListener("touchend", resume);
-        host.removeEventListener("touchcancel", resume);
+        host.removeEventListener("touchstart", onStart);
+        host.removeEventListener("touchmove", onMove);
+        host.removeEventListener("touchend", onEnd);
+        host.removeEventListener("touchcancel", onEnd);
+        host.removeEventListener("click", onClickCapture, true);
         host.removeEventListener("mouseenter", pause);
         host.removeEventListener("mouseleave", resume);
       }
@@ -172,13 +243,24 @@ export default function TheStreet() {
         </div>
       </div>
 
-      {/* the drive — overflow hidden, transform only */}
-      <Reveal className="relative mt-10 overflow-hidden md:mt-14">
+      {/* the drive — transform only, and drivable by hand on touch.
+          Reduced motion gets a plainly scrollable rail instead. */}
+      <Reveal
+        className={
+          reduced
+            ? "relative mt-10 overflow-x-auto md:mt-14"
+            : "relative mt-10 touch-pan-y overflow-hidden md:mt-14"
+        }
+      >
         <div ref={trackRef} className="flex w-max pb-6 will-change-transform">
           {stops.map((s) => lot(s, false))}
           {stops.map((s) => lot(s, true))}
         </div>
       </Reveal>
+
+      <p className="label mx-auto mt-5 max-w-7xl px-5 text-ink/40 md:px-8 lg:hidden">
+        Drag to drive&ensp;·&ensp;tap a home to enter
+      </p>
 
       <div className="relative mx-auto mt-10 max-w-7xl px-5 md:mt-12 md:px-8">
         <Reveal className="flex flex-wrap items-center gap-x-8 gap-y-4">
