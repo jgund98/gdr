@@ -87,7 +87,7 @@ export default function Footer() {
             <p className="mt-6 text-sm leading-relaxed text-mist">
               A {site.parent} company.
               <br />
-              West Palm Beach · Los Angeles · Est. {site.founded}
+              West Palm Beach&ensp;·&ensp;Los Angeles&ensp;·&ensp;Est.&nbsp;{site.founded}
             </p>
           </div>
         </div>
