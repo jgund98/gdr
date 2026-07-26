@@ -45,6 +45,45 @@ const zones = [
   { key: "soso", label: "SOSO — SOUTH OF SOUTHERN", lx: 258, ly: 566, x: 200, y: 532, w: 435, h: 232 },
 ] as const;
 
+/* The portrait projection. Same city, squeezed to a phone: the west/east
+   split across S Olive Ave survives, and so does the north→south order. */
+const zonesM: {
+  key: string;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  lines: readonly string[];
+  ly: readonly number[];
+  sub?: string;
+  subY?: number;
+}[] = [
+  { key: "flamingo", x: 46, y: 58, w: 146, h: 84, lines: ["FLAMINGO", "PARK"], ly: [86, 104] },
+  { key: "elcid", x: 210, y: 176, w: 110, h: 84, lines: ["EL CID"], ly: [224] },
+  { key: "prospect", x: 210, y: 272, w: 110, h: 74, lines: ["PROSPECT", "PARK"], ly: [303, 321] },
+  { key: "southland", x: 210, y: 358, w: 110, h: 74, lines: ["SOUTHLAND", "PARK"], ly: [389, 407] },
+  {
+    key: "soso",
+    x: 46,
+    y: 474,
+    w: 274,
+    h: 192,
+    lines: ["SOSO"],
+    ly: [512],
+    sub: "SOUTH OF SOUTHERN",
+    subY: 532,
+  },
+] as const;
+
+const pinsM = [
+  { slug: "kanuga-707", x: 140, y: 130 },
+  { slug: "washington-3609", x: 288, y: 508 },
+  { slug: "greymon-227", x: 262, y: 596 },
+  { slug: "greymon-309", x: 214, y: 596 },
+  { slug: "greymon-317", x: 166, y: 596 },
+  { slug: "greymon-335", x: 118, y: 596 },
+] as const;
+
 export default function ThePlot({ compact = false }: { compact?: boolean }) {
   const [active, setActive] = useState<string>("greymon-317");
   const [zone, setZone] = useState<string | null>(null);
@@ -150,9 +189,12 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
         {/* the sheet — full width, note pinned on the water band */}
         <Reveal className={compact ? "" : "mt-14"}>
           <div className="relative border border-ink/15 bg-paper shadow-[0_30px_80px_rgba(11,14,9,0.12)]">
-            {/* ── phones: the same survey, drawn portrait so it all fits ── */}
+            {/* ── phones: the same city, re-projected portrait ──
+                Not a stack: Flamingo Park still sits west of Olive, the
+                El Cid / Prospect / Southland column still runs down the
+                water, and SoSo still spans wide below Southern Blvd. */}
             <svg
-              viewBox="0 0 420 790"
+              viewBox="0 0 420 820"
               className="block h-auto w-full lg:hidden"
               role="img"
               aria-label="Survey map of West Palm Beach districts with GDR residences"
@@ -163,72 +205,86 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
                 </pattern>
               </defs>
 
+              {/* sheet margin — a working drawing, not a diagram */}
+              <g stroke="rgba(11,14,9,0.25)" strokeWidth="1" fill="none">
+                <path d="M 10 10 H 410 M 10 810 H 410 M 10 10 V 810 M 410 10 V 810" opacity="0.55" />
+                <path d="M 110 10 v 6 M 210 10 v 6 M 310 10 v 6" />
+                <path d="M 110 810 v -6 M 210 810 v -6 M 310 810 v -6" />
+                <path d="M 10 210 h 6 M 10 410 h 6 M 10 610 h 6" />
+              </g>
+
               {/* the water, down the east edge */}
-              <rect x="330" y="0" width="46" height="790" fill="url(#waterM)" stroke="rgba(11,14,9,0.28)" strokeWidth="1.2" />
-              <rect x="376" y="0" width="30" height="790" fill="#f3f5ed" stroke="rgba(11,14,9,0.32)" strokeWidth="1.2" />
-              <rect x="406" y="0" width="14" height="790" fill="url(#waterM)" />
-              <text x="345" y="250" fill="rgba(11,14,9,0.45)" fontSize="11" letterSpacing="0.26em" transform="rotate(90 345 250)" fontFamily="var(--font-instrument-sans)">
+              <rect x="336" y="18" width="44" height="784" fill="url(#waterM)" stroke="rgba(11,14,9,0.28)" strokeWidth="1.2" />
+              <rect x="380" y="18" width="26" height="784" fill="#f3f5ed" stroke="rgba(11,14,9,0.32)" strokeWidth="1.2" />
+              <text x="352" y="236" fill="rgba(11,14,9,0.45)" fontSize="10" letterSpacing="0.26em" transform="rotate(90 352 236)" fontFamily="var(--font-instrument-sans)">
                 INTRACOASTAL
               </text>
-              <text x="393" y="520" fill="rgba(11,14,9,0.5)" fontSize="11" letterSpacing="0.26em" transform="rotate(90 393 520)" fontFamily="var(--font-instrument-sans)">
+              <text x="396" y="556" fill="rgba(11,14,9,0.55)" fontSize="10" letterSpacing="0.26em" transform="rotate(90 396 556)" fontFamily="var(--font-instrument-sans)">
                 PALM BEACH
               </text>
+              {/* the bridge home */}
+              <path d="M 336 462 H 380" stroke="rgba(11,14,9,0.35)" strokeWidth="2.5" />
 
-              {/* arteries */}
-              <g stroke="rgba(11,14,9,0.22)" strokeWidth="1.6" fill="none">
-                <path d="M 60 20 V 770" />
-                <path d="M 150 20 V 770" />
-                <path d="M 316 20 V 770" strokeWidth="1.2" />
-                <path d="M 20 160 H 330" />
-                <path d="M 20 486 H 420" strokeWidth="2.2" />
+              {/* arteries — Dixie and Olive west, Flagler on the water */}
+              <g stroke="rgba(11,14,9,0.24)" strokeWidth="1.6" fill="none">
+                <path d="M 36 24 V 796" />
+                <path d="M 200 24 V 796" />
+                <path d="M 326 24 V 796" strokeWidth="1.1" />
+                <path d="M 20 158 H 336" />
+                <path d="M 20 462 H 336" strokeWidth="2.4" />
               </g>
-              <g fill="rgba(11,14,9,0.42)" fontSize="10" letterSpacing="0.18em" fontFamily="var(--font-instrument-sans)">
+              <g fill="rgba(11,14,9,0.45)" fontSize="10" letterSpacing="0.18em" fontFamily="var(--font-instrument-sans)">
                 <text x="26" y="152">BELVEDERE RD</text>
-                <text x="26" y="478">SOUTHERN BLVD</text>
-                <text x="146" y="330" transform="rotate(90 146 330)">S OLIVE AVE</text>
-                <text x="312" y="120" transform="rotate(90 312 120)">S FLAGLER DR</text>
+                <text x="26" y="456">SOUTHERN BLVD</text>
+                <text x="30" y="196" transform="rotate(90 30 196)">S DIXIE HWY</text>
+                <text x="194" y="268" transform="rotate(90 194 268)">S OLIVE AVE</text>
+                <text x="320" y="86" transform="rotate(90 320 86)">S FLAGLER DR</text>
               </g>
 
-              {/* the districts, stacked the way the city actually runs */}
-              {[
-                { key: "flamingo", label: "FLAMINGO PARK", y: 44, h: 100 },
-                { key: "elcid", label: "EL CID", y: 186, h: 92 },
-                { key: "prospect", label: "PROSPECT PARK", y: 292, h: 78 },
-                { key: "southland", label: "SOUTHLAND PARK", y: 384, h: 82 },
-                { key: "soso", label: "SOSO", sub: "SOUTH OF SOUTHERN", y: 506, h: 200 },
-              ].map((z) => {
+              {/* cross-street texture, so the parcels sit on a real grid */}
+              <g stroke="rgba(11,14,9,0.10)" strokeWidth="1" fill="none">
+                <path d="M 46 86 H 192 M 46 118 H 192" />
+                <path d="M 210 202 H 320 M 210 236 H 320 M 210 298 H 320 M 210 386 H 320" />
+                <path d="M 46 524 H 320 M 46 560 H 320 M 46 632 H 320" />
+              </g>
+
+              {/* the districts, where the city actually puts them */}
+              {zonesM.map((z) => {
                 const on = zone === z.key;
                 return (
                   <g key={z.key} className="cursor-pointer" onClick={() => setZone(z.key)}>
                     <rect
-                      x="70"
+                      x={z.x}
                       y={z.y}
-                      width="240"
+                      width={z.w}
                       height={z.h}
                       fill={on ? "rgba(137,191,88,0.26)" : "rgba(137,191,88,0.11)"}
                       stroke={on ? "rgba(71,118,31,0.65)" : "rgba(71,118,31,0.3)"}
                       strokeWidth={on ? "1.8" : "1"}
                       strokeDasharray="5 4"
                     />
-                    <text
-                      x="190"
-                      y={z.y + (z.sub ? z.h / 2 - 8 : z.h / 2 + 5)}
-                      textAnchor="middle"
-                      fill="rgba(71,118,31,0.95)"
-                      fontSize="15"
-                      letterSpacing="0.2em"
-                      fontWeight="600"
-                      fontFamily="var(--font-instrument-sans)"
-                    >
-                      {z.label}
-                    </text>
+                    {z.lines.map((line, i) => (
+                      <text
+                        key={line}
+                        x={z.x + z.w / 2}
+                        y={z.ly[i]}
+                        textAnchor="middle"
+                        fill="rgba(71,118,31,0.95)"
+                        fontSize={z.sub ? "14" : "12"}
+                        letterSpacing="0.18em"
+                        fontWeight="600"
+                        fontFamily="var(--font-instrument-sans)"
+                      >
+                        {line}
+                      </text>
+                    ))}
                     {z.sub && (
                       <text
-                        x="190"
-                        y={z.y + z.h / 2 + 12}
+                        x={z.x + z.w / 2}
+                        y={z.subY}
                         textAnchor="middle"
                         fill="rgba(71,118,31,0.6)"
-                        fontSize="10"
+                        fontSize="9"
                         letterSpacing="0.22em"
                         fontFamily="var(--font-instrument-sans)"
                       >
@@ -239,21 +295,14 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
                 );
               })}
 
-              {/* Greymon Dr, running through SoSo */}
-              <path d="M 80 640 H 300" stroke="rgba(11,14,9,0.2)" strokeWidth="1.2" />
-              <text x="82" y="614" fill="rgba(11,14,9,0.4)" fontSize="9" letterSpacing="0.16em" fontFamily="var(--font-instrument-sans)">
+              {/* Greymon Dr, running east–west through SoSo */}
+              <path d="M 56 596 H 310" stroke="rgba(11,14,9,0.2)" strokeWidth="1.2" />
+              <text x="58" y="584" fill="rgba(11,14,9,0.42)" fontSize="9" letterSpacing="0.16em" fontFamily="var(--font-instrument-sans)">
                 GREYMON DR
               </text>
 
               {/* the pins — thumb-sized */}
-              {[
-                { slug: "kanuga-707", x: 120, y: 108 },
-                { slug: "washington-3609", x: 286, y: 452 },
-                { slug: "greymon-227", x: 268, y: 640 },
-                { slug: "greymon-309", x: 224, y: 640 },
-                { slug: "greymon-317", x: 180, y: 640 },
-                { slug: "greymon-335", x: 136, y: 640 },
-              ].map((pin) => {
+              {pinsM.map((pin) => {
                 const on = active === pin.slug && !zone;
                 return (
                   <g
@@ -268,34 +317,44 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
                       </rect>
                     )}
                     <rect x="-9" y="-9" width="18" height="18" transform="rotate(45)" fill={on ? "#47761f" : "#89bf58"} stroke="#f3f5ed" strokeWidth="2" />
-                    <circle r="30" fill="transparent" />
+                    <circle r="28" fill="transparent" />
                   </g>
                 );
               })}
 
+              {/* north */}
+              <g transform="translate(296 62)">
+                <path d="M 0 14 L 0 -12 M 0 -12 L -5 -1 M 0 -12 L 5 -1" stroke="rgba(11,14,9,0.5)" strokeWidth="1.8" fill="none" />
+                <text x="0" y="30" textAnchor="middle" fill="rgba(11,14,9,0.5)" fontSize="10" letterSpacing="0.2em" fontFamily="var(--font-instrument-sans)">
+                  N
+                </text>
+              </g>
+
               {/* California, as a footnote strip */}
               <g onClick={() => pick("linda-flora-2179")} className="cursor-pointer">
-                <rect x="20" y="724" width="290" height="52" fill="none" stroke="rgba(11,14,9,0.18)" strokeWidth="1" />
-                <text x="32" y="744" fill="rgba(11,14,9,0.45)" fontSize="9" letterSpacing="0.2em" fontFamily="var(--font-instrument-sans)">
+                <rect x="20" y="690" width="300" height="56" fill="none" stroke="rgba(11,14,9,0.18)" strokeWidth="1" />
+                <text x="32" y="712" fill="rgba(11,14,9,0.45)" fontSize="9" letterSpacing="0.2em" fontFamily="var(--font-instrument-sans)">
                   SELECT PROJECTS — CALIFORNIA
                 </text>
-                <text x="32" y="765" fill="rgba(71,118,31,0.9)" fontSize="11" letterSpacing="0.16em" fontWeight="600" fontFamily="var(--font-instrument-sans)">
+                <text x="32" y="734" fill="rgba(71,118,31,0.9)" fontSize="11" letterSpacing="0.16em" fontWeight="600" fontFamily="var(--font-instrument-sans)">
                   BEL AIR
                 </text>
-                <text x="150" y="765" fill="rgba(71,118,31,0.9)" fontSize="11" letterSpacing="0.16em" fontWeight="600" fontFamily="var(--font-instrument-sans)">
+                <text x="132" y="734" fill="rgba(71,118,31,0.9)" fontSize="11" letterSpacing="0.16em" fontWeight="600" fontFamily="var(--font-instrument-sans)">
                   HOLLYWOOD HILLS
                 </text>
-                <rect x="112" y="754" width="11" height="11" transform="rotate(45 117.5 759.5)" fill="#89bf58" stroke="#f3f5ed" strokeWidth="1.6" />
-                <rect x="286" y="754" width="11" height="11" transform="rotate(45 291.5 759.5)" fill="#89bf58" stroke="#f3f5ed" strokeWidth="1.6" />
+                <rect x="96" y="724" width="11" height="11" transform="rotate(45 101.5 729.5)" fill="#89bf58" stroke="#f3f5ed" strokeWidth="1.6" />
+                <rect x="270" y="724" width="11" height="11" transform="rotate(45 275.5 729.5)" fill="#89bf58" stroke="#f3f5ed" strokeWidth="1.6" />
               </g>
 
               {/* title block */}
               <g fontFamily="var(--font-instrument-sans)">
-                <text x="330" y="748" fill="rgba(11,14,9,0.55)" fontSize="9" letterSpacing="0.16em" fontWeight="600">
-                  GDR
+                <rect x="20" y="756" width="300" height="46" fill="#f3f5ed" stroke="rgba(11,14,9,0.3)" strokeWidth="1.2" />
+                <path d="M 20 780 H 320" stroke="rgba(11,14,9,0.2)" strokeWidth="1" />
+                <text x="32" y="773" fill="rgba(11,14,9,0.65)" fontSize="11" letterSpacing="0.18em" fontWeight="600">
+                  GDR DEVELOPMENT
                 </text>
-                <text x="330" y="764" fill="rgba(11,14,9,0.35)" fontSize="8" letterSpacing="0.14em">
-                  SURVEY
+                <text x="32" y="795" fill="rgba(11,14,9,0.45)" fontSize="9.5" letterSpacing="0.16em">
+                  SURVEY OF WORK — WPB
                 </text>
               </g>
             </svg>

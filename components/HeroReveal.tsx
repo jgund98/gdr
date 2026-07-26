@@ -117,9 +117,11 @@ export default function HeroReveal() {
             then falls off to nothing so the aerial keeps its light and colour. */}
         <div className="absolute inset-0" aria-hidden>
           {/* a light overall grade: sky calmed, foreground seated */}
-          <div className="absolute inset-0 bg-gradient-to-b from-ink/40 via-transparent to-ink/55" />
-          {/* the sheet — laid across the type column, torn away to the right */}
-          <div className="absolute inset-0 bg-[linear-gradient(101deg,rgba(11,14,9,0.93)_0%,rgba(11,14,9,0.86)_26%,rgba(11,14,9,0.62)_46%,rgba(11,14,9,0.26)_62%,rgba(11,14,9,0.04)_75%,transparent_84%)]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-ink/48 via-ink/10 to-ink/62" />
+          {/* the sheet — laid across the type column, torn away to the right.
+              Carried further right and deeper than a scrim needs to be: the
+              seated ground is what makes the green read vibrant. */}
+          <div className="absolute inset-0 bg-[linear-gradient(101deg,rgba(11,14,9,0.95)_0%,rgba(11,14,9,0.90)_26%,rgba(11,14,9,0.75)_46%,rgba(11,14,9,0.52)_62%,rgba(11,14,9,0.30)_75%,rgba(11,14,9,0.13)_88%,transparent_100%)]" />
           {/* the grid, printed only where the sheet lies */}
           <div className="survey absolute inset-0 opacity-80 [mask-image:linear-gradient(101deg,#000_0%,#000_44%,transparent_72%)]" />
           {/* the plotted edge of the sheet, catching the light */}
