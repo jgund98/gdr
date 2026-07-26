@@ -257,3 +257,17 @@ body {
     transform: scale(1.5);
   }
 }
+
+/* ── the hero's house panel: bled to the edges, feathered into the city ──
+   Prefixed and unprefixed so older WebKit still gets the soft edge rather
+   than a hard rectangle (which would read as a pasted-on card). */
+.house-bleed {
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 30%);
+  mask-image: linear-gradient(180deg, transparent 0%, #000 30%);
+}
+@media (min-width: 1024px) {
+  .house-bleed {
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 34%);
+    mask-image: linear-gradient(90deg, transparent 0%, #000 34%);
+  }
+}

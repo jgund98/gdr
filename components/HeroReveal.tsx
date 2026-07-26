@@ -5,92 +5,155 @@ import Image from "next/image";
 import { motion, useReducedMotion } from "motion/react";
 import Btn from "@/components/Btn";
 import RevealLines from "@/components/RevealLines";
+import HeroHouse from "@/components/HeroHouse";
 import Ticker from "@/components/Ticker";
 
 /**
  * The opening move, in two acts.
  *
  * Act I — load: a drafting sheet parts along a plotted green line and the
- * city fills the window. The drawing becomes the neighborhood.
+ * frame fills with West Palm Beach from the air and, bled into the same
+ * photograph, one of the finished houses. City and house, one picture —
+ * so the work is visible before a word is read.
  *
- * Act II — first scroll: the hero pins and the camera descends toward the
- * street grid while a survey overlay plots the block in real time — lot
- * lines, dimension ticks, coordinates. The developer claiming the ground.
+ * Act II — first scroll: the hero pins, the camera descends toward the
+ * street, and the house rises to take the whole frame. The city, then the
+ * house standing on it.
  *
  * All scroll work runs in a layout-based rAF (Lenis-safe); every animated
- * property is a transform, opacity, or SVG dashoffset.
+ * property is a transform or an opacity.
  */
 export default function HeroReveal() {
   const reduced = useReducedMotion();
   const [gone, setGone] = useState(false);
+  const [descending, setDescending] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const wrapRef = useRef<HTMLElement | null>(null);
   const zoomRef = useRef<HTMLDivElement | null>(null);
   const wordsRef = useRef<HTMLDivElement | null>(null);
+  const copyRef = useRef<HTMLDivElement | null>(null);
   const tickerRef = useRef<HTMLDivElement | null>(null);
   const fadeRef = useRef<HTMLDivElement | null>(null);
   const svgRef = useRef<SVGSVGElement | null>(null);
   const cueRef = useRef<HTMLDivElement | null>(null);
 
+  // The aerial only decodes while it is actually on screen — a 12-second
+  // loop running behind six sections of page is pure battery.
   useEffect(() => {
-    videoRef.current?.play().catch(() => {});
+    const el = wrapRef.current;
+    const vid = videoRef.current;
+    if (!el || !vid) return;
+    vid.play().catch(() => {});
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) vid.play().catch(() => {});
+        else vid.pause();
+      },
+      { threshold: 0 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
   }, []);
 
-  // Act II — the descent
+  // Act III — the descent
   useEffect(() => {
     if (reduced) return;
     let raf = 0;
     const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
-    // each plotted stroke draws across its own slice of the scroll
     const strokes: { el: SVGElement | null; start: number; dur: number }[] = [];
     if (svgRef.current) {
       svgRef.current.querySelectorAll<SVGElement>("[data-plot]").forEach((el, i) => {
-        strokes.push({ el, start: 0.12 + i * 0.09, dur: 0.2 });
+        strokes.push({ el, start: 0.1 + i * 0.055, dur: 0.14 });
       });
     }
     const labels = svgRef.current
       ? [...svgRef.current.querySelectorAll<SVGElement>("[data-label]")]
       : [];
+    const houseFull = document.querySelector<HTMLElement>("[data-house-full]");
+    const caption = document.querySelector<HTMLElement>("[data-house-caption]");
     let lastP = -1;
-    const loop = (t: number) => {
+    let wasDescending = false;
+    let running = false;
+
+    const loop = () => {
       raf = requestAnimationFrame(loop);
       const wrap = wrapRef.current;
       if (!wrap) return;
       const r = wrap.getBoundingClientRect();
-      // the whole hero has scrolled away — no work to do
       if (r.bottom < -8) return;
       const vh = window.innerHeight;
+      const vw = window.innerWidth;
       const p = clamp(-r.top / (r.height - vh));
       if (p === lastP && p >= 1) return;
       lastP = p;
+
+      // the city pushes in
       const zoom = zoomRef.current;
       if (zoom) {
-        const s = 1 + p * (window.innerWidth < 768 ? 0.18 : 0.32);
-        zoom.style.transform = `scale(${s}) translateY(${p * 5}%)`;
+        const s = 1 + p * (vw < 768 ? 0.16 : 0.28);
+        zoom.style.transform = `scale(${s}) translateY(${p * 4}%)`;
       }
-      if (wordsRef.current) {
-        wordsRef.current.style.opacity = String(clamp(1 - p * 2.4));
-        wordsRef.current.style.transform = `translateY(${-p * 14}vh)`;
+      // the words step aside early — the picture is the point
+      for (const el of [wordsRef.current, copyRef.current]) {
+        if (!el) continue;
+        el.style.opacity = String(clamp(1 - p * 3.4));
+        el.style.transform = `translateY(${-p * 16}vh)`;
       }
-      if (tickerRef.current) tickerRef.current.style.opacity = String(clamp(1 - p * 1.2));
+      if (tickerRef.current) tickerRef.current.style.opacity = String(clamp(1 - p * 2.2));
       if (cueRef.current) cueRef.current.style.opacity = String(clamp(1 - p * 5));
-      if (fadeRef.current) fadeRef.current.style.opacity = String(clamp((p - 0.72) / 0.28) * 0.92);
-      if (svgRef.current) svgRef.current.style.opacity = String(clamp(p * 4) * clamp((1 - p) * 6));
+      if (fadeRef.current) fadeRef.current.style.opacity = String(clamp((p - 0.82) / 0.18) * 0.94);
+      if (svgRef.current) {
+        svgRef.current.style.opacity = String(clamp(p * 5) * clamp((0.42 - p) * 8));
+      }
       for (const s of strokes) {
         if (!s.el) continue;
         const d = clamp((p - s.start) / s.dur);
         (s.el as SVGGeometryElement).style.strokeDashoffset = String(1 - d);
       }
       for (const l of labels) {
-        l.style.opacity = String(clamp((p - 0.42) / 0.15) * clamp((1 - p) * 6));
+        l.style.opacity = String(clamp((p - 0.24) / 0.1) * clamp((0.42 - p) * 8));
+      }
+
+      // the house comes up to fill the frame — the city, then the house on it
+      if (houseFull) {
+        const t = clamp((p - 0.26) / 0.46);
+        const e = t * t * (3 - 2 * t);
+        houseFull.style.opacity = String(e);
+        houseFull.style.transform = `scale(${1.07 - 0.07 * e})`;
+        if (caption) caption.style.opacity = String(clamp(1 - e * 2.4));
+      }
+      const d = p > 0.12;
+      if (d !== wasDescending) {
+        wasDescending = d;
+        setDescending(d);
       }
     };
-    raf = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(raf);
+    // the loop exists only while the hero is on screen; past it, the page
+    // costs nothing
+    const start = () => {
+      if (running) return;
+      running = true;
+      raf = requestAnimationFrame(loop);
+    };
+    const stop = () => {
+      running = false;
+      cancelAnimationFrame(raf);
+    };
+    const el = wrapRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop()), {
+      threshold: 0,
+    });
+    io.observe(el);
+    return () => {
+      io.disconnect();
+      cancelAnimationFrame(raf);
+    };
   }, [reduced]);
 
   const panel = "absolute inset-x-0 z-30 h-1/2 bg-paper survey-ink";
   const ease = [0.76, 0, 0.24, 1] as const;
+  const started = reduced || gone;
 
   return (
     <section
@@ -98,14 +161,14 @@ export default function HeroReveal() {
       aria-label="GDR Development"
       className={reduced ? "relative h-[100svh] min-h-[520px]" : "relative h-[240svh]"}
     >
-      <div className="sticky top-0 h-[100svh] min-h-[520px] overflow-hidden">
+      <div className="sticky top-0 h-[100svh] min-h-[560px] overflow-hidden">
         {/* the city — West Palm Beach from above, running to the Intracoastal */}
         <div ref={zoomRef} className="absolute inset-0 will-change-transform" style={{ transformOrigin: "50% 64%" }}>
           <video
             ref={videoRef}
             className="absolute inset-0 h-full w-full object-cover"
-            src="/videos/wpb-neighborhood-v4.mp4"
-            poster="/videos/wpb-neighborhood-poster-v4.webp"
+            src="/videos/wpb-neighborhood-v5.mp4"
+            poster="/videos/wpb-neighborhood-poster-v5.webp"
             autoPlay
             muted
             loop
@@ -113,24 +176,16 @@ export default function HeroReveal() {
             preload="auto"
           />
         </div>
-        {/* The vellum — a drafting sheet laid over the city. It holds the type,
-            then falls off to nothing so the aerial keeps its light and colour. */}
+        {/* The vellum — a drafting sheet laid over the city. */}
         <div className="absolute inset-0" aria-hidden>
-          {/* a light overall grade: sky calmed, foreground seated */}
           <div className="absolute inset-0 bg-gradient-to-b from-ink/48 via-ink/10 to-ink/62" />
-          {/* the sheet — laid across the type column, torn away to the right.
-              Carried further right and deeper than a scrim needs to be: the
-              seated ground is what makes the green read vibrant. */}
           <div className="absolute inset-0 bg-[linear-gradient(101deg,rgba(11,14,9,0.95)_0%,rgba(11,14,9,0.90)_26%,rgba(11,14,9,0.75)_46%,rgba(11,14,9,0.52)_62%,rgba(11,14,9,0.30)_75%,rgba(11,14,9,0.13)_88%,transparent_100%)]" />
-          {/* the grid, printed only where the sheet lies */}
           <div className="survey absolute inset-0 opacity-80 [mask-image:linear-gradient(101deg,#000_0%,#000_44%,transparent_72%)]" />
-          {/* the plotted edge of the sheet, catching the light */}
           <div className="absolute inset-0 bg-[linear-gradient(101deg,transparent_0%,transparent_77.5%,rgba(137,191,88,0.2)_79.5%,transparent_81.5%)]" />
-          {/* the ticker's footing */}
           <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-ink/75 to-transparent" />
         </div>
 
-        {/* the survey overlay — drawn by the scroll */}
+        {/* the survey overlay — drawn by the scroll, gone before the house lands */}
         {!reduced && (
           <svg
             ref={svgRef}
@@ -142,41 +197,23 @@ export default function HeroReveal() {
             <g
               fill="none"
               stroke="#89bf58"
-              strokeWidth="2"
+              strokeWidth="1.5"
+              strokeOpacity="0.8"
               pathLength={1}
               strokeDasharray="1"
-              style={{ filter: "drop-shadow(0 0 6px rgba(137,191,88,0.65))" }}
             >
-              {/* the block */}
               <path data-plot d="M 285 585 L 715 585" strokeDashoffset={1} />
               <path data-plot d="M 715 585 L 715 855" strokeDashoffset={1} />
               <path data-plot d="M 715 855 L 285 855" strokeDashoffset={1} />
               <path data-plot d="M 285 855 L 285 585" strokeDashoffset={1} />
-              {/* lot divisions */}
               <path data-plot d="M 430 585 L 430 855" strokeWidth="1.4" strokeDashoffset={1} />
               <path data-plot d="M 570 585 L 570 855" strokeWidth="1.4" strokeDashoffset={1} />
-              {/* dimension line above the block */}
-              <path data-plot d="M 285 548 L 715 548" strokeWidth="1.2" strokeDashoffset={1} />
             </g>
-            {/* corner ticks */}
             <g stroke="#89bf58" strokeWidth="3" data-label style={{ opacity: 0 }}>
               <path d="M 285 585 h 16 M 285 585 v 16" fill="none" />
               <path d="M 715 585 h -16 M 715 585 v 16" fill="none" />
               <path d="M 715 855 h -16 M 715 855 v -16" fill="none" />
               <path d="M 285 855 h 16 M 285 855 v -16" fill="none" />
-            </g>
-            <g
-              data-label
-              style={{ opacity: 0 }}
-              fill="#a6d977"
-              fontSize="17"
-              fontFamily="var(--font-instrument-sans), sans-serif"
-              letterSpacing="0.18em"
-            >
-              <text x="285" y="530">26.68° N · 80.05° W</text>
-              <text x="500" y="900" textAnchor="middle" fill="#89bf58">
-                THE NEXT STREET IS ALREADY CHOSEN
-              </text>
             </g>
           </svg>
         )}
@@ -229,55 +266,72 @@ export default function HeroReveal() {
           </>
         )}
 
-        {/* the words — landing as the sheet parts, drifting out on descent */}
-        <div ref={wordsRef} className="relative z-10 mx-auto flex h-full max-w-7xl flex-col justify-end px-5 pb-20 will-change-transform md:px-8 md:pb-28">
-          <motion.p
-            className="mb-5 flex flex-wrap items-center gap-3"
-            initial={reduced ? false : { opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: reduced ? 0 : 1.55, duration: 0.6 }}
-          >
-            <span className="label chamfer-sm bg-green px-3.5 py-2 text-ink">
-              Luxury Real Estate Development
-            </span>
-            <span className="label text-paper/90 [text-shadow:0_1px_10px_rgba(11,14,9,0.9)]">
-              West Palm Beach — Est. 1997
-            </span>
-          </motion.p>
-          <RevealLines
-            as="h1"
-            delay={reduced ? 0 : 1.68}
-            className="text-[12.5vw] leading-[0.98] [text-shadow:0_2px_34px_rgba(11,14,9,0.5)] sm:text-[10.5vw] md:text-[9vw] lg:text-[7.2rem] xl:text-[8.2rem] 2xl:text-[9rem]"
-            lines={[
-              "THE BEST HOUSE",
-              <span key="l2">
-                ON THE <em className="text-green">street.</em>
-              </span>,
-            ]}
-          />
-          <motion.div
-            initial={reduced ? false : { opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: reduced ? 0 : 1.95, duration: 0.6 }}
-          >
-            <p className="mt-4 max-w-xl text-base leading-relaxed text-paper/95 [text-shadow:0_2px_20px_rgba(11,14,9,0.9),0_1px_4px_rgba(11,14,9,0.7)] md:mt-6 md:text-xl">
-              A limited collection in West&nbsp;Palm&nbsp;Beach's most protected
-              neighborhoods — sold direct by the&nbsp;developer.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-3 md:mt-8 md:gap-4">
-              <Btn href="/residences">View the Residences</Btn>
-              <Btn href="/contact" variant="outline">
-                Inquire Directly
-              </Btn>
-            </div>
-          </motion.div>
+        {/* the work — bled into the frame behind the type */}
+        <HeroHouse start={started} paused={descending} />
+        {/* the photograph's own footing — sits ABOVE the house so the
+            caption and the ticker never land on a sunlit wall */}
+        <div
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-56 bg-gradient-to-t from-ink/90 via-ink/45 to-transparent lg:h-64"
+          aria-hidden
+        />
+
+        {/* the words — a single tight block, held clear of the house */}
+        <div className="relative z-10 mx-auto flex h-full max-w-7xl flex-col justify-center px-5 pb-[46%] pt-20 md:px-8 lg:pb-24 lg:pt-24">
+          <div ref={wordsRef} className="min-w-0 will-change-transform lg:max-w-[52%]">
+            <motion.p
+              className="mb-3.5 flex flex-wrap items-center gap-x-3 gap-y-2"
+              initial={reduced ? false : { opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: reduced ? 0 : 1.55, duration: 0.6 }}
+            >
+              <span className="label chamfer-sm bg-green px-3 py-1.5 text-ink">
+                Luxury Real Estate Development
+              </span>
+              <span className="label text-paper/90 [text-shadow:0_1px_10px_rgba(11,14,9,0.9)]">
+                West Palm Beach — Est. 1997
+              </span>
+            </motion.p>
+            <RevealLines
+              as="h1"
+              delay={reduced ? 0 : 1.68}
+              /* sized so both lines sit unwrapped at every width */
+              className="text-[10vw] leading-[0.98] [text-shadow:0_2px_34px_rgba(11,14,9,0.55)] sm:text-[8.6vw] md:text-[7.4vw] lg:text-[3.1rem] xl:text-[3.8rem] 2xl:text-[4.2rem]"
+              lines={[
+                "HOUSES THAT",
+                <span key="l2">
+                  BECOME <em className="text-green">homes.</em>
+                </span>,
+              ]}
+            />
+            <motion.div
+              ref={copyRef}
+              className="min-w-0 will-change-transform"
+              initial={reduced ? false : { opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: reduced ? 0 : 1.95, duration: 0.6 }}
+            >
+              <p className="mt-4 max-w-md text-base leading-relaxed text-paper/95 [text-shadow:0_2px_20px_rgba(11,14,9,0.9),0_1px_4px_rgba(11,14,9,0.7)] md:mt-5 md:text-lg">
+                Historic homes rebuilt. New ones built to&nbsp;belong.
+              </p>
+              <div className="mt-5 flex flex-wrap gap-3 md:mt-6 md:gap-4">
+                <Btn href="/residences">View the Residences</Btn>
+                <Btn href="/contact" variant="outline">
+                  Inquire Directly
+                </Btn>
+              </div>
+              <p className="label mt-4 hidden text-paper/60 [text-shadow:0_1px_10px_rgba(11,14,9,0.9)] lg:block">
+                Sold direct by the developer
+              </p>
+            </motion.div>
+          </div>
         </div>
 
         {/* scroll cue */}
         {!reduced && (
           <motion.div
             ref={cueRef}
-            className="absolute bottom-20 right-6 z-10 hidden items-center gap-2 md:flex"
+            /* left side: the caption owns the right corner */
+            className="absolute bottom-16 left-5 z-10 hidden items-center gap-2 md:flex md:left-8"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 2.6, duration: 0.8 }}
@@ -298,7 +352,9 @@ export default function HeroReveal() {
         <div ref={fadeRef} className="pointer-events-none absolute inset-0 z-20 bg-ink opacity-0" aria-hidden />
 
         {/* the neighborhoods, and only the neighborhoods */}
-        <div ref={tickerRef} className="absolute inset-x-0 bottom-0 z-10 border-t border-line bg-ink/60 backdrop-blur-sm">
+        {/* solid, not backdrop-blurred: a live blur over playing video is
+            the most expensive thing a phone GPU can be asked to do here */}
+        <div ref={tickerRef} className="absolute inset-x-0 bottom-0 z-10 border-t border-line bg-ink/85">
           <Ticker />
         </div>
       </div>

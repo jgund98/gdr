@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
@@ -90,9 +90,32 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
   const p = bySlug(active);
   const d = zone ? districts.find((x) => x.key === zone) : null;
   const allSlugs = [...pins, ...laPins].map((x) => x.slug);
+
+  /* Phones: the note can't live under a 760px drawing — a tap there would
+     read as nothing happening. It pins to the bottom of the screen instead,
+     for as long as the sheet is what you're looking at. */
+  const mapRef = useRef<HTMLDivElement>(null);
+  const [mapInView, setMapInView] = useState(false);
+  const [noteOpen, setNoteOpen] = useState(true);
+
+  useEffect(() => {
+    const el = mapRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => setMapInView(e.isIntersecting), {
+      threshold: 0.12,
+    });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   const pick = (slug: string) => {
     setZone(null);
     setActive(slug);
+    setNoteOpen(true);
+  };
+  const pickZone = (key: string) => {
+    setZone(key);
+    setNoteOpen(true);
   };
 
   /* One panel, two homes: pinned on the sheet (desktop), under it (mobile). */
@@ -187,8 +210,13 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
         )}
 
         {/* the sheet — full width, note pinned on the water band */}
-        <Reveal className={compact ? "" : "mt-14"}>
-          <div className="relative border border-ink/15 bg-paper shadow-[0_30px_80px_rgba(11,14,9,0.12)]">
+        <p className="label mb-3 text-ink/40 lg:hidden">Tap a district or a pin</p>
+
+        <Reveal className={compact ? "" : "mt-14 lg:mt-14"}>
+          <div
+            ref={mapRef}
+            className="relative border border-ink/15 bg-paper shadow-[0_30px_80px_rgba(11,14,9,0.12)]"
+          >
             {/* ── phones: the same city, re-projected portrait ──
                 Not a stack: Flamingo Park still sits west of Olive, the
                 El Cid / Prospect / Southland column still runs down the
@@ -252,7 +280,7 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
               {zonesM.map((z) => {
                 const on = zone === z.key;
                 return (
-                  <g key={z.key} className="cursor-pointer" onClick={() => setZone(z.key)}>
+                  <g key={z.key} className="cursor-pointer" onClick={() => pickZone(z.key)}>
                     <rect
                       x={z.x}
                       y={z.y}
@@ -586,10 +614,33 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
           </div>
         </Reveal>
 
-        <p className="label mt-3 text-ink/40 lg:hidden">Tap a district or a pin</p>
-
-        {/* the note, in flow, for phones */}
-        <Reveal className="mt-8 border border-ink/15 bg-paper p-6 lg:hidden">{panel}</Reveal>
+        {/* the surveyor's note — pinned to the screen (phones), so a tap on
+            the drawing answers where the thumb already is */}
+        <AnimatePresence>
+          {mapInView && noteOpen && (
+            <motion.div
+              className="fixed inset-x-3 bottom-3 z-40 max-h-[46svh] overflow-y-auto overscroll-contain border border-ink/25 bg-paper p-5 shadow-[0_-10px_40px_rgba(11,14,9,0.28)] lg:hidden"
+              initial={{ y: "110%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "110%" }}
+              transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <span
+                className="absolute -top-2 left-1/2 h-4 w-4 -translate-x-1/2 rotate-45 border border-ink/20 bg-green"
+                aria-hidden
+              />
+              <button
+                type="button"
+                onClick={() => setNoteOpen(false)}
+                aria-label="Close the note"
+                className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center text-xl leading-none text-ink/45 transition-colors hover:text-ink"
+              >
+                ×
+              </button>
+              {panel}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
       </div>
     </section>
