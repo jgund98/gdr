@@ -10,7 +10,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "The Practice — A Developer-Led Approach to Historic Homes",
   description:
-    "Inside GDR Development: 28 years of South Florida development, from Miami's Century Hotel to West Palm Beach's historic districts. Respect for character, structure first, and the developer on site.",
+    "Inside GDR Development: 28 years of South Florida development, from Miami Beach's Century Hotel to West Palm Beach's historic districts. Respect for character, structure first, and the developer on site.",
 };
 
 const principles = [
@@ -104,7 +104,7 @@ export default function PracticePage() {
                   className="object-cover"
                 />
                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/80 to-transparent p-4 pt-12">
-                  <p className="label text-paper/85">Miami — where it all began</p>
+                  <p className="label text-paper/85">Miami Beach — where it all began</p>
                 </div>
               </div>
             </div>
@@ -114,7 +114,7 @@ export default function PracticePage() {
               <p className="lede text-paper/90">
                 Gus Renny isn't just a developer — he's a recognized name in
                 South Florida prestige real estate, with a body of work that runs from
-                the restoration of Miami's historic Century Hotel to some of the
+                the restoration of Miami Beach's historic Century Hotel to some of the
                 most coveted homes in Southern Florida.
               </p>
             </Reveal>
@@ -161,13 +161,13 @@ export default function PracticePage() {
               },
               {
                 name: "Flamingo Park",
-                fact: "City district 1993 · National Register 2000",
-                body: "Platted in 1921 on the highest coastal ridge between downtown and Miami — 501 contributing Mission, Mediterranean Revival, and Frame Vernacular structures still standing.",
+                fact: "National Register, 2000 · 458 historic buildings",
+                body: "Ninety-five acres bounded by Belvedere Road, Parker Avenue, Park Place and Florida Avenue, built out through the 1920s in Mission and Spanish Revival. The neighborhood knows what it is.",
               },
               {
                 name: "Prospect & Southland Park",
                 fact: "National Register, 2011 · significance 1922–1945",
-                body: "A neighborhood gridded after Brooklyn's Prospect Park, with its own waterfront park along Washington Road. Quiet streets that never lost their plan.",
+                body: "One Register district running from South Dixie Highway down to the Lake Worth waterfront, its houses dating 1922 to 1945. Quiet streets that never lost their plan.",
               },
             ].map((dz, i) => (
               <Reveal key={dz.name} delay={0.07 * i}>

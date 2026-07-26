@@ -16,9 +16,22 @@ import { bySlug } from "@/lib/properties";
  * A second, unmasked copy sits ready underneath: the descent fades it up
  * and the house becomes the entire frame. Opacity and transform only.
  */
-/* the four sharpest exteriors — used at their native resolution, never
-   re-cropped or upscaled, so the descent zoom stays crisp */
-const ORDER = ["greymon-309", "kanuga-707", "washington-3609", "greymon-227"] as const;
+/**
+ * The four sharpest exteriors, used at their native resolution — never
+ * re-cropped or upscaled, so the descent zoom stays crisp.
+ *
+ * `focus` is where the house actually sits across each frame. A phone crops
+ * a landscape photograph very hard, and centre-cropping cuts the entry off
+ * 309 and 3609 entirely, so each one carries its own focal point rather
+ * than trusting the middle.
+ */
+const HOUSES = [
+  { slug: "greymon-309", focus: "28%" },
+  { slug: "kanuga-707", focus: "45%" },
+  { slug: "washington-3609", focus: "32%" },
+  { slug: "greymon-227", focus: "30%" },
+] as const;
+const ORDER = HOUSES.map((h) => h.slug);
 const HOLD = 5200;
 
 export default function HeroHouse({
@@ -37,14 +50,15 @@ export default function HeroHouse({
     return () => clearInterval(t);
   }, [reduced, paused, start]);
 
-  const slug = ORDER[i];
+  const { slug, focus } = HOUSES[i];
+  const next = HOUSES[(i + 1) % HOUSES.length];
   const p = bySlug(slug);
   if (!p) return null;
 
   return (
     <>
       {/* the panel — bled to the edges, feathered into the city */}
-      <div className="house-bleed pointer-events-none absolute inset-x-0 bottom-0 h-[42%] lg:inset-y-0 lg:left-auto lg:right-0 lg:h-full lg:w-[58%]">
+      <div className="house-bleed pointer-events-none absolute inset-x-0 bottom-0 h-[52%] lg:inset-y-0 lg:left-auto lg:right-0 lg:h-full lg:w-[58%]">
         <AnimatePresence>
           {/* opacity is React's (AnimatePresence needs it for the exit);
               the long settle is a CSS keyframe so it never touches the
@@ -62,7 +76,8 @@ export default function HeroHouse({
               alt={`${p.address} — ${p.neighborhood}, ${p.city}`}
               fill
               sizes="(max-width: 1024px) 100vw, 58vw"
-              className="object-cover object-[center_42%]"
+              className="object-cover"
+              style={{ objectPosition: `${focus} 42%` }}
               priority={i === 0}
             />
           </motion.div>
@@ -71,7 +86,7 @@ export default function HeroHouse({
             on a slow connection */}
         <div className="pointer-events-none absolute inset-0 opacity-0" aria-hidden>
           <Image
-            src={`/properties/${ORDER[(i + 1) % ORDER.length]}/01.webp`}
+            src={`/properties/${next.slug}/01.webp`}
             alt=""
             fill
             sizes="(max-width: 1024px) 100vw, 58vw"
@@ -91,7 +106,8 @@ export default function HeroHouse({
           alt=""
           fill
           sizes="100vw"
-          className="object-cover object-[center_45%]"
+          className="object-cover"
+          style={{ objectPosition: `${focus} 45%` }}
         />
       </div>
 

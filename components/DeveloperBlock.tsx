@@ -41,7 +41,7 @@ export default function DeveloperBlock() {
               lede={
                 <>
                   Twenty-eight years of South Florida development — from the
-                  restoration of Miami&rsquo;s historic Century Hotel to some of
+                  restoration of Miami Beach&rsquo;s historic Century Hotel to some of
                   the most coveted streets in West Palm Beach. Gus walks every
                   site, signs every plan, and builds each home as if his own
                   family would live&nbsp;in&nbsp;it. And when a residence sells,

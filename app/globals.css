@@ -226,6 +226,14 @@ body {
 }
 .animate-marquee {
   animation: marquee 38s linear infinite;
+  /* its own layer, so the walk is composited and never waits on the main
+     thread — and a hint that only the transform will change */
+  will-change: transform;
+  backface-visibility: hidden;
+}
+/* off screen it earns nothing; the compositor shouldn't pay for it */
+.ticker-idle .animate-marquee {
+  animation-play-state: paused;
 }
 @media (prefers-reduced-motion: reduce) {
   .animate-marquee {
@@ -262,10 +270,12 @@ body {
    Prefixed and unprefixed so older WebKit still gets the soft edge rather
    than a hard rectangle (which would read as a pasted-on card). */
 .house-bleed {
-  /* a short handoff on phones: the less distance two photographs overlap,
-     the less they muddy each other */
-  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 18%);
-  mask-image: linear-gradient(180deg, transparent 0%, #000 18%);
+  /* A long rise on phones. The aerial behind is already dark by the time
+     the house has any presence (see the scrim in the hero), so this can
+     take its time without the two photographs muddying each other — and a
+     short fade out of a black band is exactly what reads as a hard edge. */
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 40%);
+  mask-image: linear-gradient(180deg, transparent 0%, #000 40%);
 }
 
 /* ── the opening drawing, in pure CSS ──────────────────────────────

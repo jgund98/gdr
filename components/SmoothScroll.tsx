@@ -15,6 +15,8 @@ export default function SmoothScroll() {
     if (mem !== undefined && mem <= 4) return;
     const lenis = new Lenis({ lerp: 0.11, wheelMultiplier: 0.95 });
     lenisRef.current = lenis;
+    // the header needs it to send you home smoothly from the same route
+    (window as unknown as { __lenis?: Lenis }).__lenis = lenis;
     let raf = 0;
     const loop = (t: number) => {
       lenis.raf(t);
@@ -25,6 +27,7 @@ export default function SmoothScroll() {
       cancelAnimationFrame(raf);
       lenis.destroy();
       lenisRef.current = null;
+      delete (window as unknown as { __lenis?: Lenis }).__lenis;
     };
   }, []);
 

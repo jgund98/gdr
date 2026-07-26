@@ -49,6 +49,8 @@ export default function HeroReveal() {
       ([e]) => {
         if (e.isIntersecting) vid.play().catch(() => {});
         else vid.pause();
+        // the neighbourhood walk idles with it
+        tickerRef.current?.classList.toggle("ticker-idle", !e.isIntersecting);
       },
       { threshold: 0 }
     );
@@ -75,6 +77,14 @@ export default function HeroReveal() {
     let lastP = -1;
     let wasDescending = false;
     let running = false;
+    const lastOpacity = new WeakMap<HTMLElement, string>();
+    const setOpacity = (el: HTMLElement | null, v: number) => {
+      if (!el) return;
+      const next = v.toFixed(3);
+      if (lastOpacity.get(el) === next) return;
+      lastOpacity.set(el, next);
+      el.style.opacity = next;
+    };
 
     const loop = () => {
       raf = requestAnimationFrame(loop);
@@ -100,9 +110,12 @@ export default function HeroReveal() {
         el.style.opacity = String(clamp(1 - p * 3.4));
         el.style.transform = `translateY(${-p * 16}vh)`;
       }
-      if (tickerRef.current) tickerRef.current.style.opacity = String(clamp(1 - p * 2.2));
-      if (cueRef.current) cueRef.current.style.opacity = String(clamp(1 - p * 5));
-      if (fadeRef.current) fadeRef.current.style.opacity = String(clamp((p - 0.82) / 0.18) * 0.94);
+      // only write when the value actually moves: a redundant style write is
+      // a style recalculation, and doing three of them every frame is what
+      // makes a composited marquee look like it stutters
+      setOpacity(tickerRef.current, clamp(1 - p * 2.2));
+      setOpacity(cueRef.current, clamp(1 - p * 5));
+      setOpacity(fadeRef.current, clamp((p - 0.82) / 0.18) * 0.94);
       if (svgRef.current) {
         svgRef.current.style.opacity = String(clamp(p * 5) * clamp((0.42 - p) * 8));
       }
@@ -162,6 +175,9 @@ export default function HeroReveal() {
     <section
       ref={wrapRef}
       aria-label="GDR Development"
+      /* the header watches for this: while the hero is pinned the page isn't
+         really travelling, so the bar stays transparent until it releases */
+      data-pinned-hero={reduced ? undefined : ""}
       className={reduced ? "relative h-[100dvh] min-h-[520px]" : "relative h-[240svh]"}
     >
       {/* dvh, not svh: when the phone's address bar collapses the visible
@@ -295,7 +311,7 @@ export default function HeroReveal() {
             busy photographs blending into each other reads as noise; a house
             rising out of darkness reads as one picture. */}
         <div
-          className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,transparent_36%,rgba(11,14,9,0.72)_50%,rgba(11,14,9,0.97)_60%,rgba(11,14,9,0.97)_100%)] lg:hidden"
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,transparent_22%,rgba(11,14,9,0.50)_40%,rgba(11,14,9,0.88)_56%,rgba(11,14,9,0.95)_70%,rgba(11,14,9,0.95)_100%)] lg:hidden"
           aria-hidden
         />
 

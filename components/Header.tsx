@@ -12,14 +12,52 @@ import { cn } from "@/lib/cn";
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+
+  /**
+   * The mark always goes home, and home always means the top. A Link to the
+   * route you are already on is a no-op in Next, so on "/" the click has to
+   * do the scrolling itself — through Lenis when it is running, so its
+   * internal position stays in step with the page.
+   */
+  const goHome = (e: React.MouseEvent) => {
+    setOpen(false);
+    if (pathname !== "/") return; // let the Link navigate; the route change lands at top
+    e.preventDefault();
+    const lenis = (window as unknown as { __lenis?: { scrollTo: (t: number, o?: object) => void } })
+      .__lenis;
+    if (lenis) lenis.scrollTo(0, { duration: 0.9 });
+    else window.scrollTo({ top: 0, behavior: "smooth" });
+  };
   const pathname = usePathname();
 
+  /**
+   * The bar only takes its dark backing once the page is genuinely moving.
+   * The home hero is pinned for well over a viewport while its descent
+   * plays, and scrollY climbs the whole time even though nothing has
+   * physically travelled yet — darkening there reads as a bug. So on a page
+   * that declares a pinned hero, the threshold is the point that hero
+   * releases; everywhere else it stays the usual few pixels.
+   */
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    let threshold = 24;
+    const measure = () => {
+      const hero = document.querySelector<HTMLElement>("[data-pinned-hero]");
+      threshold = hero ? Math.max(24, hero.offsetHeight - window.innerHeight - 40) : 24;
+    };
+    const onScroll = () => setScrolled(window.scrollY > threshold);
+    measure();
     onScroll();
+    const onResize = () => {
+      measure();
+      onScroll();
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+    window.addEventListener("resize", onResize);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onResize);
+    };
+  }, [pathname]);
 
   useEffect(() => {
     setOpen(false);
@@ -53,6 +91,7 @@ export default function Header() {
         <Link
           href="/"
           aria-label="GDR Development — home"
+          onClick={goHome}
           className="relative z-[70] drop-shadow-[0_2px_14px_rgba(0,0,0,0.65)]"
         >
           <Image

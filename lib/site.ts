@@ -50,10 +50,10 @@ export const districts = [
   {
     key: "flamingo",
     name: "Flamingo Park",
-    designation: "City historic district 1993 · National Register 2000",
-    era: "Platted 1921 — Florida land boom",
+    designation: "National Register 2000 · 458 historic buildings",
+    era: "1920s — Mission and Spanish Revival",
     story:
-      "Laid out on the highest coastal ridge between downtown and Miami, Flamingo Park filled through the 1920s with Mission and Mediterranean Revival homes — 501 contributing structures still stand. The neighborhood knows exactly what it is, and protects it.",
+      "Ninety-five acres bounded by Belvedere Road, Parker Avenue, Park Place and Florida Avenue, filled through the 1920s with Mission and Spanish Revival houses. The neighborhood knows exactly what it is, and protects it.",
     gdrNote: "GDR here: a historic cottage kept, and completely rebuilt behind its character.",
     slugs: ["kanuga-707"],
   },
@@ -70,20 +70,20 @@ export const districts = [
   {
     key: "prospect",
     name: "Prospect Park",
-    designation: "Prospect–Southland National Register district, 2011",
-    era: "1922–1945 — gridded after Brooklyn's Prospect Park",
+    designation: "Prospect Park–Southland Park National Register district, 2011",
+    era: "1922–1945 — the district's period of significance",
     story:
-      "A 1920s neighborhood literally modeled on Brooklyn's Prospect Park — a central green with benches and a fountain, streets that still keep the plan. Its period of significance runs 1922 to 1945, and it shows.",
+      "Half of a National Register district listed in 2011, running between South Dixie Highway and the water. Its houses date from 1922 to 1945, and the streets still hold the plan they were laid out on.",
     gdrNote: "Coastal cottages opened up — brighter interiors, renewed systems, nothing false.",
     slugs: [],
   },
   {
     key: "southland",
     name: "Southland Park",
-    designation: "Prospect–Southland National Register district, 2011",
-    era: "1920s — waterfront park along Washington Road",
+    designation: "Prospect Park–Southland Park National Register district, 2011",
+    era: "1922–1945 — the district's period of significance",
     story:
-      "The southern half of the Register district, with its own waterfront park running along Washington Road. Quiet streets, original massing, Intracoastal light — the kind of block that rewards patience.",
+      "The southern half of the same Register district, running down to the Lake Worth waterfront. Quiet streets, original massing, Intracoastal light — the kind of block that rewards patience.",
     gdrNote: "GDR here: 3609 Washington Rd — nearly 3,000 square feet planned around light.",
     slugs: ["washington-3609"],
   },
