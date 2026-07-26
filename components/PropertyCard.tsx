@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import type { Property } from "@/lib/properties";
+import { imgSrc, type Property } from "@/lib/properties";
 import { cn } from "@/lib/cn";
 import { noWidow } from "@/lib/text";
 
@@ -36,7 +36,7 @@ export default function PropertyCard({
       <div className="plate">
         <div className="relative aspect-[4/3] overflow-hidden">
           <Image
-            src={`/properties/${property.slug}/01.webp`}
+            src={imgSrc(property.slug, 1)}
             alt={`${property.address}, ${property.city}`}
             fill
             priority={priority}

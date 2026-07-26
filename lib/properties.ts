@@ -52,8 +52,8 @@ export const properties: Property[] = [
       "This residence has found its owner — walk the reel below to see the standard, then ask about what's coming next.",
     ],
     video: {
-      src: "/videos/tour-309.mp4",
-      poster: "/videos/tour-309-poster.webp",
+      src: "/videos/tour-309-v2.mp4",
+      poster: "/videos/tour-309-poster-v2.webp",
       label: "Preview reel — 309 Greymon Dr",
     },
   },
@@ -71,8 +71,8 @@ export const properties: Property[] = [
       "The walkthrough below moves through the completed residence — no renderings, no staging tricks. This is the delivered home.",
     ],
     video: {
-      src: "/videos/film-317.mp4",
-      poster: "/videos/film-317-poster.webp",
+      src: "/videos/film-317-v2.mp4",
+      poster: "/videos/film-317-poster-v2.webp",
       label: "Walkthrough — 317 Greymon Dr",
     },
   },
@@ -160,10 +160,16 @@ export const properties: Property[] = [
 
 export const bySlug = (slug: string) => properties.find((p) => p.slug === slug);
 
+/** galleries whose files were re-cut in place — bust immutable browser caches */
+const rev: Record<string, string> = { "greymon-317": "?v=2", "linda-flora-2179": "?v=2", "marlay-1501": "?v=2" };
+
+export const imgSrc = (slug: string, n: number) =>
+  `/properties/${slug}/${String(n).padStart(2, "0")}.webp${rev[slug] ?? ""}`;
+
 export const gallery = (p: Property) =>
   Array.from({ length: p.images }, (_, i) => i + 1)
     .filter((n) => !p.exclude?.includes(n))
-    .map((n) => `/properties/${p.slug}/${String(n).padStart(2, "0")}.webp`);
+    .map((n) => imgSrc(p.slug, n));
 
 /** Featured on home, in order. */
 export const featured = ["kanuga-707", "greymon-309", "washington-3609"] as const;

@@ -8,7 +8,6 @@ import Standard from "@/components/Standard";
 import QuoteTheater from "@/components/QuoteTheater";
 import DeveloperBlock from "@/components/DeveloperBlock";
 import GroupStrip from "@/components/GroupStrip";
-import Monument from "@/components/Monument";
 import Reveal from "@/components/Reveal";
 import SectionHead from "@/components/SectionHead";
 
@@ -37,8 +36,8 @@ export default function Home() {
           />
           <Reveal delay={0.12} className="mt-12">
             <FilmTheater
-              src="/videos/film-317.mp4"
-              poster="/videos/film-317-poster.webp"
+              src="/videos/film-317-v2.mp4"
+              poster="/videos/film-317-poster-v2.webp"
               label="Walkthrough — 317 Greymon Dr"
             />
           </Reveal>
@@ -49,7 +48,6 @@ export default function Home() {
       <QuoteTheater />
       <DeveloperBlock />
       <GroupStrip />
-      <Monument />
     </>
   );
 }

@@ -152,8 +152,8 @@ export default function TheTurn() {
         <Reveal delay={0.12} className="mx-auto mt-16 max-w-4xl md:mt-20">
           <p className="label mb-5 text-faint">And in motion — 309 Greymon Dr, framing to finished</p>
           <FilmTheater
-            src="/videos/tour-309.mp4"
-            poster="/videos/tour-309-poster.webp"
+            src="/videos/tour-309-v2.mp4"
+            poster="/videos/tour-309-poster-v2.webp"
             label="309 Greymon Dr — framing to finished"
           />
         </Reveal>

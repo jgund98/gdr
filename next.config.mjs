@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  images: {
+    // versioned local images (?v=N) bust year-long immutable browser caches
+    localPatterns: [{ pathname: "/**" }],
+  },
   async headers() {
     return [
       {

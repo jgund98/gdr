@@ -8,7 +8,7 @@ import SectionHead from "@/components/SectionHead";
 import Reveal from "@/components/Reveal";
 import PalmShadow from "@/components/PalmShadow";
 import { StatusChip } from "@/components/PropertyCard";
-import { bySlug } from "@/lib/properties";
+import { bySlug, imgSrc } from "@/lib/properties";
 import { districts } from "@/lib/site";
 import { noWidow } from "@/lib/text";
 import { cn } from "@/lib/cn";
@@ -105,7 +105,7 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
             <Link href={`/residences/${p.slug}`} className="group block">
               <div className="relative aspect-[16/10] overflow-hidden">
                 <Image
-                  src={`/properties/${p.slug}/01.webp`}
+                  src={imgSrc(p.slug, 1)}
                   alt={`${p.address}, ${p.city}`}
                   fill
                   sizes="(min-width: 1024px) 380px, 100vw"

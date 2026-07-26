@@ -9,7 +9,7 @@ import Reveal from "@/components/Reveal";
 import PalmShadow from "@/components/PalmShadow";
 import Btn from "@/components/Btn";
 import { StatusChip } from "@/components/PropertyCard";
-import { bySlug } from "@/lib/properties";
+import { bySlug, imgSrc } from "@/lib/properties";
 import { noWidow } from "@/lib/text";
 
 /**
@@ -32,6 +32,7 @@ const stops = [
 export default function TheStreet() {
   const trackRef = useRef<HTMLDivElement | null>(null);
   const paused = useRef(false);
+  const onScreen = useRef(true);
   const pos = useRef(0);
   const boost = useRef(0); // signed px still owed to an arrow press
   const reduced = useReducedMotion();
@@ -43,6 +44,7 @@ export default function TheStreet() {
     let raf = 0;
     const loop = () => {
       raf = requestAnimationFrame(loop);
+      if (!onScreen.current) return;
       const half = track.scrollWidth / 2;
       if (half <= 0) return;
       if (!paused.current) pos.current += 0.55;
@@ -56,6 +58,8 @@ export default function TheStreet() {
       track.style.transform = `translateX(${-pos.current}px)`;
     };
     raf = requestAnimationFrame(loop);
+    const io = new IntersectionObserver(([e]) => (onScreen.current = e.isIntersecting));
+    io.observe(track);
 
     const pause = () => (paused.current = true);
     const resume = () => (paused.current = false);
@@ -69,6 +73,7 @@ export default function TheStreet() {
     }
     return () => {
       cancelAnimationFrame(raf);
+      io.disconnect();
       if (host) {
         host.removeEventListener("touchstart", pause);
         host.removeEventListener("touchend", resume);
@@ -98,7 +103,7 @@ export default function TheStreet() {
             <div className="plate plate-ink">
               <div className="relative aspect-[16/11] overflow-hidden">
                 <Image
-                  src={`/properties/${slug}/01.webp`}
+                  src={imgSrc(slug, 1)}
                   alt={clone ? "" : `${p.address}, ${p.city}`}
                   fill
                   sizes="(min-width: 1024px) 36vw, 80vw"

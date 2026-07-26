@@ -164,15 +164,6 @@ export default function FilmTheater({
             </motion.div>
             <div className="survey absolute inset-0 opacity-40" aria-hidden />
             <div className="absolute inset-0 bg-ink/25 transition-colors duration-300 group-hover:bg-ink/10" aria-hidden />
-            {/* the scan */}
-            {!reduced && (
-              <motion.div
-                className="absolute inset-y-0 w-[2px] bg-green/80 shadow-[0_0_18px_rgba(137,191,88,0.8)]"
-                animate={{ left: ["-2%", "102%"] }}
-                transition={{ duration: 5.5, repeat: Infinity, ease: [0.45, 0, 0.55, 1] }}
-                aria-hidden
-              />
-            )}
             {/* play control — a drawn ring around the mark */}
             <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
               <span className="relative flex h-20 w-20 items-center justify-center md:h-24 md:w-24">
