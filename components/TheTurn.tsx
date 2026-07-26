@@ -34,19 +34,19 @@ export default function TheTurn() {
         <SectionHead
           index="03"
           tag="The Turn"
-          headSize="text-3xl sm:text-4xl md:text-[clamp(2rem,3.8vw,3.6rem)]"
+          headSize="text-[1.7rem] sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl"
           lines={[
-            <span key="l1" className="md:whitespace-nowrap">
-              THE HOUSE <em className="text-green">nobody</em> WANTS.
+            <span key="l1" className="whitespace-nowrap">
+              THE WORST HOUSE
             </span>,
-            <span key="l2" className="md:whitespace-nowrap">
-              THE STREET <em className="text-green">everybody</em> DOES.
+            <span key="l2" className="whitespace-nowrap">
+              ON THE BEST <em className="text-green">street.</em>
             </span>,
           ]}
           lede={
             <>
-              335 Greymon Dr, exactly as we found it — and the residence taking
-              its place. Drag the&nbsp;line.
+              335 Greymon Dr as we found it, and the residence taking its
+              place. Drag the&nbsp;line.
             </>
           }
         />

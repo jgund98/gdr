@@ -155,7 +155,7 @@ export default function Header() {
               exit={{ opacity: 0, transition: { duration: 0.2 } }}
               transition={{ delay: 0.5, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             >
-              <p className="display text-2xl text-green">West Palm Beach · Los Angeles</p>
+              <p className="display text-2xl text-green">West Palm Beach</p>
               <p className="label mt-3 text-faint">GDR DEVELOPMENT&ensp;·&ensp;Est. 1997</p>
             </motion.div>
           </motion.div>

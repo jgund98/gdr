@@ -150,8 +150,159 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
         {/* the sheet — full width, note pinned on the water band */}
         <Reveal className={compact ? "" : "mt-14"}>
           <div className="relative border border-ink/15 bg-paper shadow-[0_30px_80px_rgba(11,14,9,0.12)]">
-            <div className="overflow-x-auto">
-            <svg viewBox="0 0 900 840" className="block h-auto w-full min-w-[760px] sm:min-w-0 lg:max-h-[78vh]" role="img" aria-label="Diagrammatic survey map of West Palm Beach with GDR residences pinned">
+            {/* ── phones: the same survey, drawn portrait so it all fits ── */}
+            <svg
+              viewBox="0 0 420 790"
+              className="block h-auto w-full lg:hidden"
+              role="img"
+              aria-label="Survey map of West Palm Beach districts with GDR residences"
+            >
+              <defs>
+                <pattern id="waterM" width="9" height="9" patternUnits="userSpaceOnUse">
+                  <path d="M 0 4.5 H 9" stroke="rgba(11,14,9,0.16)" strokeWidth="1" />
+                </pattern>
+              </defs>
+
+              {/* the water, down the east edge */}
+              <rect x="330" y="0" width="46" height="790" fill="url(#waterM)" stroke="rgba(11,14,9,0.28)" strokeWidth="1.2" />
+              <rect x="376" y="0" width="30" height="790" fill="#f3f5ed" stroke="rgba(11,14,9,0.32)" strokeWidth="1.2" />
+              <rect x="406" y="0" width="14" height="790" fill="url(#waterM)" />
+              <text x="345" y="250" fill="rgba(11,14,9,0.45)" fontSize="11" letterSpacing="0.26em" transform="rotate(90 345 250)" fontFamily="var(--font-instrument-sans)">
+                INTRACOASTAL
+              </text>
+              <text x="393" y="520" fill="rgba(11,14,9,0.5)" fontSize="11" letterSpacing="0.26em" transform="rotate(90 393 520)" fontFamily="var(--font-instrument-sans)">
+                PALM BEACH
+              </text>
+
+              {/* arteries */}
+              <g stroke="rgba(11,14,9,0.22)" strokeWidth="1.6" fill="none">
+                <path d="M 60 20 V 770" />
+                <path d="M 150 20 V 770" />
+                <path d="M 316 20 V 770" strokeWidth="1.2" />
+                <path d="M 20 160 H 330" />
+                <path d="M 20 486 H 420" strokeWidth="2.2" />
+              </g>
+              <g fill="rgba(11,14,9,0.42)" fontSize="10" letterSpacing="0.18em" fontFamily="var(--font-instrument-sans)">
+                <text x="26" y="152">BELVEDERE RD</text>
+                <text x="26" y="478">SOUTHERN BLVD</text>
+                <text x="146" y="330" transform="rotate(90 146 330)">S OLIVE AVE</text>
+                <text x="312" y="120" transform="rotate(90 312 120)">S FLAGLER DR</text>
+              </g>
+
+              {/* the districts, stacked the way the city actually runs */}
+              {[
+                { key: "flamingo", label: "FLAMINGO PARK", y: 44, h: 100 },
+                { key: "elcid", label: "EL CID", y: 186, h: 92 },
+                { key: "prospect", label: "PROSPECT PARK", y: 292, h: 78 },
+                { key: "southland", label: "SOUTHLAND PARK", y: 384, h: 82 },
+                { key: "soso", label: "SOSO", sub: "SOUTH OF SOUTHERN", y: 506, h: 200 },
+              ].map((z) => {
+                const on = zone === z.key;
+                return (
+                  <g key={z.key} className="cursor-pointer" onClick={() => setZone(z.key)}>
+                    <rect
+                      x="70"
+                      y={z.y}
+                      width="240"
+                      height={z.h}
+                      fill={on ? "rgba(137,191,88,0.26)" : "rgba(137,191,88,0.11)"}
+                      stroke={on ? "rgba(71,118,31,0.65)" : "rgba(71,118,31,0.3)"}
+                      strokeWidth={on ? "1.8" : "1"}
+                      strokeDasharray="5 4"
+                    />
+                    <text
+                      x="190"
+                      y={z.y + (z.sub ? z.h / 2 - 8 : z.h / 2 + 5)}
+                      textAnchor="middle"
+                      fill="rgba(71,118,31,0.95)"
+                      fontSize="15"
+                      letterSpacing="0.2em"
+                      fontWeight="600"
+                      fontFamily="var(--font-instrument-sans)"
+                    >
+                      {z.label}
+                    </text>
+                    {z.sub && (
+                      <text
+                        x="190"
+                        y={z.y + z.h / 2 + 12}
+                        textAnchor="middle"
+                        fill="rgba(71,118,31,0.6)"
+                        fontSize="10"
+                        letterSpacing="0.22em"
+                        fontFamily="var(--font-instrument-sans)"
+                      >
+                        {z.sub}
+                      </text>
+                    )}
+                  </g>
+                );
+              })}
+
+              {/* Greymon Dr, running through SoSo */}
+              <path d="M 80 640 H 300" stroke="rgba(11,14,9,0.2)" strokeWidth="1.2" />
+              <text x="82" y="614" fill="rgba(11,14,9,0.4)" fontSize="9" letterSpacing="0.16em" fontFamily="var(--font-instrument-sans)">
+                GREYMON DR
+              </text>
+
+              {/* the pins — thumb-sized */}
+              {[
+                { slug: "kanuga-707", x: 120, y: 108 },
+                { slug: "washington-3609", x: 286, y: 452 },
+                { slug: "greymon-227", x: 268, y: 640 },
+                { slug: "greymon-309", x: 224, y: 640 },
+                { slug: "greymon-317", x: 180, y: 640 },
+                { slug: "greymon-335", x: 136, y: 640 },
+              ].map((pin) => {
+                const on = active === pin.slug && !zone;
+                return (
+                  <g
+                    key={pin.slug}
+                    transform={`translate(${pin.x} ${pin.y})`}
+                    className="cursor-pointer"
+                    onClick={() => pick(pin.slug)}
+                  >
+                    {on && (
+                      <rect x="-16" y="-16" width="32" height="32" transform="rotate(45)" fill="none" stroke="#47761f" strokeWidth="1.6" opacity="0.6">
+                        <animate attributeName="opacity" values="0.7;0.15;0.7" dur="2s" repeatCount="indefinite" />
+                      </rect>
+                    )}
+                    <rect x="-9" y="-9" width="18" height="18" transform="rotate(45)" fill={on ? "#47761f" : "#89bf58"} stroke="#f3f5ed" strokeWidth="2" />
+                    <circle r="30" fill="transparent" />
+                  </g>
+                );
+              })}
+
+              {/* California, as a footnote strip */}
+              <g onClick={() => pick("linda-flora-2179")} className="cursor-pointer">
+                <rect x="20" y="724" width="290" height="52" fill="none" stroke="rgba(11,14,9,0.18)" strokeWidth="1" />
+                <text x="32" y="744" fill="rgba(11,14,9,0.45)" fontSize="9" letterSpacing="0.2em" fontFamily="var(--font-instrument-sans)">
+                  SELECT PROJECTS — CALIFORNIA
+                </text>
+                <text x="32" y="765" fill="rgba(71,118,31,0.9)" fontSize="11" letterSpacing="0.16em" fontWeight="600" fontFamily="var(--font-instrument-sans)">
+                  BEL AIR
+                </text>
+                <text x="150" y="765" fill="rgba(71,118,31,0.9)" fontSize="11" letterSpacing="0.16em" fontWeight="600" fontFamily="var(--font-instrument-sans)">
+                  HOLLYWOOD HILLS
+                </text>
+                <rect x="112" y="754" width="11" height="11" transform="rotate(45 117.5 759.5)" fill="#89bf58" stroke="#f3f5ed" strokeWidth="1.6" />
+                <rect x="286" y="754" width="11" height="11" transform="rotate(45 291.5 759.5)" fill="#89bf58" stroke="#f3f5ed" strokeWidth="1.6" />
+              </g>
+
+              {/* title block */}
+              <g fontFamily="var(--font-instrument-sans)">
+                <text x="330" y="748" fill="rgba(11,14,9,0.55)" fontSize="9" letterSpacing="0.16em" fontWeight="600">
+                  GDR
+                </text>
+                <text x="330" y="764" fill="rgba(11,14,9,0.35)" fontSize="8" letterSpacing="0.14em">
+                  SURVEY
+                </text>
+              </g>
+            </svg>
+
+            {/* ── desktop: the wide sheet, untouched ── */}
+            <div className="hidden lg:block">
+            <svg viewBox="0 0 900 840" className="block h-auto w-full lg:max-h-[78vh]" role="img" aria-label="Diagrammatic survey map of West Palm Beach with GDR residences pinned">
               <defs>
                 <pattern id="water" width="10" height="10" patternUnits="userSpaceOnUse">
                   <path d="M 0 5 H 10" stroke="rgba(11,14,9,0.16)" strokeWidth="1" />
@@ -347,7 +498,7 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
             </div>
 
             {/* Los Angeles inset */}
-            <div className="absolute bottom-4 left-4 hidden w-52 border border-ink/20 bg-paper/95 p-4 backdrop-blur-sm sm:block">
+            <div className="absolute bottom-4 left-4 hidden w-52 border border-ink/20 bg-paper/95 p-4 backdrop-blur-sm lg:block">
               <p className="label text-ink/50">Select projects — California</p>
               <svg viewBox="0 0 240 130" className="mt-2 block w-full">
                 <path d="M 0 112 C 60 72, 110 88, 150 56 C 185 30, 215 40, 240 22" fill="none" stroke="rgba(11,14,9,0.3)" strokeWidth="2" />
@@ -376,7 +527,7 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
           </div>
         </Reveal>
 
-        <p className="label mt-3 text-ink/40 sm:hidden">Swipe the sheet — tap a district or a pin</p>
+        <p className="label mt-3 text-ink/40 lg:hidden">Tap a district or a pin</p>
 
         {/* the note, in flow, for phones */}
         <Reveal className="mt-8 border border-ink/15 bg-paper p-6 lg:hidden">{panel}</Reveal>

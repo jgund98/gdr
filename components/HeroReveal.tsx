@@ -113,7 +113,20 @@ export default function HeroReveal() {
             preload="auto"
           />
         </div>
-        <div className="absolute inset-0 bg-gradient-to-b from-ink/65 via-ink/20 to-ink/85" aria-hidden />
+        {/* The vellum — a drafting sheet laid over the city. It holds the type,
+            then falls off to nothing so the aerial keeps its light and colour. */}
+        <div className="absolute inset-0" aria-hidden>
+          {/* a light overall grade: sky calmed, foreground seated */}
+          <div className="absolute inset-0 bg-gradient-to-b from-ink/40 via-transparent to-ink/55" />
+          {/* the sheet — laid across the type column, torn away to the right */}
+          <div className="absolute inset-0 bg-[linear-gradient(101deg,rgba(11,14,9,0.93)_0%,rgba(11,14,9,0.86)_26%,rgba(11,14,9,0.62)_46%,rgba(11,14,9,0.26)_62%,rgba(11,14,9,0.04)_75%,transparent_84%)]" />
+          {/* the grid, printed only where the sheet lies */}
+          <div className="survey absolute inset-0 opacity-80 [mask-image:linear-gradient(101deg,#000_0%,#000_44%,transparent_72%)]" />
+          {/* the plotted edge of the sheet, catching the light */}
+          <div className="absolute inset-0 bg-[linear-gradient(101deg,transparent_0%,transparent_77.5%,rgba(137,191,88,0.2)_79.5%,transparent_81.5%)]" />
+          {/* the ticker's footing */}
+          <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-ink/75 to-transparent" />
+        </div>
 
         {/* the survey overlay — drawn by the scroll */}
         {!reduced && (
@@ -232,7 +245,7 @@ export default function HeroReveal() {
           <RevealLines
             as="h1"
             delay={reduced ? 0 : 1.68}
-            className="text-[12.5vw] leading-[0.98] sm:text-[10.5vw] md:text-[9vw] lg:text-[7.2rem] xl:text-[8.2rem] 2xl:text-[9rem]"
+            className="text-[12.5vw] leading-[0.98] [text-shadow:0_2px_34px_rgba(11,14,9,0.5)] sm:text-[10.5vw] md:text-[9vw] lg:text-[7.2rem] xl:text-[8.2rem] 2xl:text-[9rem]"
             lines={[
               "THE BEST HOUSE",
               <span key="l2">

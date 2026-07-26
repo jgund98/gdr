@@ -26,8 +26,11 @@ export default function Home() {
           <SectionHead
             index="04"
             tag="The Walkthrough"
+            headSize="text-[1.85rem] sm:text-5xl lg:text-6xl xl:text-7xl"
             lines={[
-              "317 GREYMON DR,",
+              <span key="l1" className="whitespace-nowrap">
+                317 GREYMON DR,
+              </span>,
               <span key="l2">
                 <em className="text-green">delivered.</em>
               </span>,

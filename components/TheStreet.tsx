@@ -146,7 +146,7 @@ export default function TheStreet() {
                 <em className="text-moss">one slow drive.</em>
               </span>,
             ]}
-            lede="Every GDR residence, West Palm Beach to Los Angeles, gliding past in order. Tap any home to step inside."
+            lede="Every GDR residence, West Palm Beach to Los Angeles. Tap any home to step inside."
           />
           <Reveal>
             <div className="hidden items-center gap-3 lg:flex">
