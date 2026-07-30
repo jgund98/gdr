@@ -86,9 +86,35 @@ const pinsM = [
   { slug: "greymon-335", x: 118, y: 420 },
 ] as const;
 
+/**
+ * Every residence is marked by a house, not an abstract point — a gabled
+ * elevation drawn in the survey's own line weight.
+ */
+function HouseMark({ active, scale = 1 }: { active: boolean; scale?: number }) {
+  return (
+    <g transform={`scale(${scale})`}>
+      {active && (
+        <circle r="19" fill="none" stroke="#47761f" strokeWidth="1.5" opacity="0.6">
+          <animate attributeName="opacity" values="0.7;0.15;0.7" dur="2s" repeatCount="indefinite" />
+        </circle>
+      )}
+      <path
+        d="M 0 -10 L 11 0.5 L 7.5 0.5 L 7.5 10 L -7.5 10 L -7.5 0.5 L -11 0.5 Z"
+        fill={active ? "#47761f" : "#89bf58"}
+        stroke="#f3f5ed"
+        strokeWidth="2"
+        strokeLinejoin="round"
+      />
+    </g>
+  );
+}
+
 export default function ThePlot({ compact = false }: { compact?: boolean }) {
   const [active, setActive] = useState<string>("greymon-317");
   const [zone, setZone] = useState<string | null>(null);
+  /* Once the pointer is on the note itself, nothing may change under it —
+     the note carries a link, so it has to survive the trip to reach it. */
+  const [held, setHeld] = useState(false);
   const p = bySlug(active);
   const d = zone ? districts.find((x) => x.key === zone) : null;
   const allSlugs = [...pins, ...laPins].map((x) => x.slug);
@@ -349,12 +375,7 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
                     className="cursor-pointer"
                     onClick={() => pick(pin.slug)}
                   >
-                    {on && (
-                      <rect x="-16" y="-16" width="32" height="32" transform="rotate(45)" fill="none" stroke="#47761f" strokeWidth="1.6" opacity="0.6">
-                        <animate attributeName="opacity" values="0.7;0.15;0.7" dur="2s" repeatCount="indefinite" />
-                      </rect>
-                    )}
-                    <rect x="-9" y="-9" width="18" height="18" transform="rotate(45)" fill={on ? "#47761f" : "#89bf58"} stroke="#f3f5ed" strokeWidth="2" />
+                    <HouseMark active={on} scale={0.95} />
                     <circle r="28" fill="transparent" />
                   </g>
                 );
@@ -380,8 +401,12 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
                 <text x="122" y="519" fill="rgba(71,118,31,0.9)" fontSize="10" letterSpacing="0.14em" fontWeight="600" fontFamily="var(--font-instrument-sans)">
                   HOLLYWOOD HILLS
                 </text>
-                <rect x="88" y="510" width="10" height="10" transform="rotate(45 93 515)" fill="#89bf58" stroke="#f3f5ed" strokeWidth="1.6" />
-                <rect x="252" y="510" width="10" height="10" transform="rotate(45 257 515)" fill="#89bf58" stroke="#f3f5ed" strokeWidth="1.6" />
+                <g transform="translate(93 515)">
+                  <HouseMark active={false} scale={0.5} />
+                </g>
+                <g transform="translate(257 515)">
+                  <HouseMark active={false} scale={0.5} />
+                </g>
               </g>
 
               {/* title line */}
@@ -405,7 +430,6 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
                   key={z.key}
                   className="cursor-pointer"
                   onClick={() => setZone(z.key)}
-                  onMouseEnter={() => setZone(z.key)}
                 >
                   <rect
                     x={z.x}
@@ -556,17 +580,12 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
                     key={pin.slug}
                     transform={`translate(${pin.x} ${pin.y})`}
                     className="cursor-pointer"
-                    onMouseEnter={() => pick(pin.slug)}
+                    onMouseEnter={() => !held && pick(pin.slug)}
                     onClick={() => pick(pin.slug)}
                   >
                     <g className="plot-pin">
-                    {isActive && (
-                      <rect x="-15" y="-15" width="30" height="30" transform="rotate(45)" fill="none" stroke="#47761f" strokeWidth="1.5" opacity="0.6">
-                        <animate attributeName="opacity" values="0.7;0.15;0.7" dur="2s" repeatCount="indefinite" />
-                      </rect>
-                    )}
-                    <rect x="-8" y="-8" width="16" height="16" transform="rotate(45)" fill={isActive ? "#47761f" : "#89bf58"} stroke="#f3f5ed" strokeWidth="2" />
-                    <circle r="32" fill="transparent" />
+                      <HouseMark active={isActive} />
+                      <circle r="32" fill="transparent" />
                     </g>
                   </g>
                 );
@@ -599,10 +618,10 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
                     key={pin.slug}
                     transform={`translate(${pin.x} ${pin.y})`}
                     className="cursor-pointer"
-                    onMouseEnter={() => pick(pin.slug)}
+                    onMouseEnter={() => !held && pick(pin.slug)}
                     onClick={() => pick(pin.slug)}
                   >
-                    <rect x="-6" y="-6" width="12" height="12" transform="rotate(45)" fill={active === pin.slug && !zone ? "#47761f" : "#89bf58"} stroke="#f3f5ed" strokeWidth="2" />
+                    <HouseMark active={active === pin.slug && !zone} scale={0.6} />
                     <circle r="17" fill="transparent" />
                   </g>
                 ))}
@@ -610,7 +629,11 @@ export default function ThePlot({ compact = false }: { compact?: boolean }) {
             </div>
 
             {/* the surveyor's note — pinned to the sheet (desktop) */}
-            <div className="absolute right-4 top-4 hidden w-[340px] border border-ink/20 bg-paper p-5 shadow-[0_18px_50px_rgba(11,14,9,0.18)] lg:block xl:right-6 xl:top-6 xl:w-[380px]">
+            <div
+              className="absolute right-4 top-4 hidden w-[340px] border border-ink/20 bg-paper p-5 shadow-[0_18px_50px_rgba(11,14,9,0.18)] lg:block xl:right-6 xl:top-6 xl:w-[380px]"
+              onMouseEnter={() => setHeld(true)}
+              onMouseLeave={() => setHeld(false)}
+            >
               <span className="absolute -top-2 left-1/2 h-4 w-4 -translate-x-1/2 rotate-45 border border-ink/20 bg-green" aria-hidden />
               {panel}
             </div>
