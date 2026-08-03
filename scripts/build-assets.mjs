@@ -44,8 +44,14 @@ const bottomCrops = {
 /* ── property galleries ─────────────────────────────────────── */
 const galleries = {
   "greymon-309": Array.from({ length: 11 }, (_, i) => `Bg-Residences-309-Greymon-${i + 1}`),
-  "greymon-317": ["Bg-Residences-317-Greymon", ...Array.from({ length: 8 }, (_, i) => `Bg-Residences-317-Greymon-${i + 2}`)],
-  "greymon-335": Array.from({ length: 8 }, (_, i) => `Bg-Residences-335-Greymon-${i + 1}`),
+  // -6 is the 309 house (green shutters, arched wood door) misfiled under 317
+  // in the client's own media; their live 317 page doesn't render it either.
+  "greymon-317": [
+    "Bg-Residences-317-Greymon",
+    ...[2, 3, 4, 5, 7, 8, 9].map((n) => `Bg-Residences-317-Greymon-${n}`),
+  ],
+  // -8 is byte-identical to -3 in the client's media — ship it once.
+  "greymon-335": Array.from({ length: 7 }, (_, i) => `Bg-Residences-335-Greymon-${i + 1}`),
   "greymon-227": Array.from({ length: 10 }, (_, i) => `Bg-Residences-227-Greymon-${i + 1}`),
   "washington-3609": Array.from({ length: 10 }, (_, i) => `Bg-Residences-3609-Washington-${i + 1}`),
   "linda-flora-2179": Array.from({ length: 16 }, (_, i) => `Bg-Residences-2179-Linda-${i + 1}`),

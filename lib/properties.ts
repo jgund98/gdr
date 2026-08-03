@@ -64,7 +64,7 @@ export const properties: Property[] = [
     neighborhood: "SoSo · South of Southern",
     region: "West Palm Beach",
     status: "Completed",
-    images: 9,
+    images: 8,
     blurb: "A completed rebuild — walked inside and above.",
     body: [
       "A finished statement of the practice: interiors reorganized for circulation and light, structure renewed end to end, and a facade the street is better for.",
@@ -83,8 +83,8 @@ export const properties: Property[] = [
     neighborhood: "SoSo · South of Southern",
     region: "West Palm Beach",
     status: "Coming Soon",
-    images: 8,
-    asFound: [2, 3, 4, 5, 6, 7, 8],
+    images: 7,
+    asFound: [2, 3, 4, 5, 6, 7],
     blurb: "A legacy lot beginning its next life — shown as found, and as planned.",
     body: [
       "This is what we start with: a legacy property worn down by decades, on a street worth every bit of the work. We publish the before because we're proud of the distance.",
@@ -161,7 +161,7 @@ export const properties: Property[] = [
 export const bySlug = (slug: string) => properties.find((p) => p.slug === slug);
 
 /** galleries whose files were re-cut in place — bust immutable browser caches */
-const rev: Record<string, string> = { "greymon-317": "?v=2", "linda-flora-2179": "?v=2", "marlay-1501": "?v=2" };
+const rev: Record<string, string> = { "greymon-317": "?v=3", "linda-flora-2179": "?v=2", "marlay-1501": "?v=2" };
 
 export const imgSrc = (slug: string, n: number) =>
   `/properties/${slug}/${String(n).padStart(2, "0")}.webp${rev[slug] ?? ""}`;
